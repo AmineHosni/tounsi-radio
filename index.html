@@ -160,6 +160,18 @@
   .pick .box svg{width:15px;height:15px;display:none}
   .pick.on .box svg{display:block}
   .chip.add{border-style:dashed}
+  .searchbox{width:100%;box-sizing:border-box;background:#15151A;border:1px solid #26262E;border-radius:13px;
+             color:var(--tx);padding:12px 14px;font-size:16px;margin:10px 0 8px;-webkit-appearance:none}
+  .searchbox::placeholder{color:#5C5C68}
+  .searchbox:focus{outline:none;border-color:#3C3C48}
+  .dirhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+  .dirhead .count{font-size:12.5px;color:var(--dim)}
+  .adv{margin-top:18px;border-top:1px solid #1C1C23;padding-top:14px}
+  .adv summary{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);
+               font-weight:680;cursor:pointer;list-style:none}
+  .adv summary::-webkit-details-marker{display:none}
+  .adv summary::before{content:"+ ";color:var(--dim)}
+  .adv[open] summary::before{content:"– "}
   .empty{text-align:center;color:var(--dim);font-size:14px;padding:34px 20px;line-height:1.5}
 
   /* ---------- transport bar ---------- */
@@ -199,15 +211,16 @@
   .scrim{position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:50;opacity:0;pointer-events:none;transition:opacity .25s}
   .scrim.open{opacity:1;pointer-events:auto}
   .sheet{
-    position:fixed;left:0;right:0;bottom:0;z-index:60;max-height:88vh;overflow:auto;
+    position:fixed;left:0;right:0;bottom:0;z-index:60;max-height:88vh;max-height:88dvh;
+    display:flex;flex-direction:column;
     background:#0D0D11;border-radius:26px 26px 0 0;border-top:1px solid #2A2A33;
-    padding:8px 20px calc(26px + var(--safe-b));
     transform:translateY(101%);transition:transform .32s cubic-bezier(.32,.72,0,1);
-    -webkit-overflow-scrolling:touch;
   }
+  .sheetbody{flex:1 1 auto;overflow:auto;-webkit-overflow-scrolling:touch;
+             padding:6px 20px calc(26px + var(--safe-b))}
   .sheet.open{transform:translateY(0)}
-  .sheetbar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;position:sticky;top:0;z-index:3;
-             background:#0D0D11;padding:6px 0 10px;margin:-8px 0 4px}
+  .sheetbar{flex:0 0 auto;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+             padding:10px 18px 9px;border-bottom:1px solid #17171d;z-index:3;background:#0D0D11}
   .grab{width:38px;height:4px;border-radius:99px;background:#33333D;margin:0 auto;border:0;padding:0;display:block}
   .sheet h2{font-size:13px;letter-spacing:.11em;text-transform:uppercase;color:var(--mut);margin:22px 0 10px;font-weight:680}
   .sheet h2:first-of-type{margin-top:6px}
@@ -307,7 +320,7 @@
   </div>
   <div class="spacer"></div>
   <button class="icon-btn" id="btnSettings" aria-label="Settings">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
   </button>
 </header>
 
@@ -365,6 +378,7 @@
     <button class="btn small" id="btnCloseSheet" style="justify-self:end">Done</button>
   </div>
 
+  <div class="sheetbody" id="sheetBody">
   <div id="sheetHome">
     <h2>While driving</h2>
     <div class="srow">
@@ -385,19 +399,28 @@
     </div>
     <p class="note" id="listMsg" style="display:none"></p>
 
-    <h2>Add a station</h2>
-    <div class="field">
-      <input id="inName" placeholder="Name" autocomplete="off" autocapitalize="words">
-      <input id="inUrl" placeholder="https://…/stream.mp3" autocomplete="off" autocapitalize="off" spellcheck="false">
+    <h2>Find more stations</h2>
+    <p class="note">The community directory (radio-browser.info) lists every Tunisian station people have
+      submitted. <b>Tap a row to listen</b>, then use the button on the right to keep or drop it.</p>
+    <input id="dirSearch" class="searchbox" type="search" placeholder="Search by name…"
+           autocomplete="off" autocapitalize="none" spellcheck="false">
+    <div class="dirhead">
+      <span class="count" id="dirCount">Loading…</span>
+      <button class="btn small" id="btnBrowse">Refresh</button>
     </div>
-    <button class="btn wide" id="btnAddManual">Add station</button>
-    <p class="note" id="addMsg" style="display:none"></p>
-
-    <h2>Find more Tunisian stations</h2>
-    <p class="note">From the community directory (radio-browser.info). <b>Tap a row to listen before adding</b>,
-      then use the button on the right to keep or drop it.</p>
-    <button class="btn wide" id="btnBrowse">Browse directory</button>
     <div class="dirlist" id="dirList"></div>
+
+    <details class="adv">
+      <summary>Add a station by link</summary>
+      <p class="note">Only useful if a station hands you a direct stream link (an <code>.mp3</code> or
+        <code>aac</code> address). Most people never need this.</p>
+      <div class="field">
+        <input id="inName" placeholder="Name" autocomplete="off" autocapitalize="words">
+        <input id="inUrl" placeholder="https://…/stream.mp3" autocomplete="off" autocapitalize="off" spellcheck="false">
+      </div>
+      <button class="btn wide" id="btnAddManual">Add station</button>
+      <p class="note" id="addMsg" style="display:none"></p>
+    </details>
 
     <h2>My added stations</h2>
     <div id="customList"><p class="note">None yet. Stations you add appear here.</p></div>
@@ -409,6 +432,7 @@
   </div>
 
   <div id="sheetLists" hidden></div>
+  </div>
 </div>
 
 <audio id="audio" playsinline preload="none" x-webkit-airplay="allow"></audio>
@@ -425,8 +449,8 @@
 const STATIONS = [
   { id:"mosaique", name:"Mosaïque FM", city:"Tunis", group:"music", url:"https://radio.mosaiquefm.net/mosalive", c:"#E70013", kbps:112, logo:"logos/mosaique.png" },
   { id:"jawhara", name:"Jawhara FM", city:"Sousse", group:"music", url:"https://streaming2.toutech.net/jawharafm", c:"#D95B2B", kbps:128, logo:"logos/jawhara.png" },
-  { id:"nationale", name:"Radio Nationale", city:"Tunis", group:"national", url:"https://radio.radiotunisienne.tn/nationale", c:"#C8963E", kbps:128 },
-  { id:"rtci", name:"RTCI", city:"Tunis", group:"national", url:"https://radio.radiotunisienne.tn/rtci", c:"#2C7DA0", kbps:128 },
+  { id:"nationale", name:"Radio Nationale", city:"Tunis", group:"national", url:"https://radio.radiotunisienne.tn/nationale", c:"#C8963E", kbps:128 , logo:"logos/rt-nationale.svg" },
+  { id:"rtci", name:"RTCI", city:"Tunis", group:"national", url:"https://radio.radiotunisienne.tn/rtci", c:"#2C7DA0", kbps:128 , logo:"logos/rt-rtci.svg" },
   { id:"diwan", name:"Diwan FM", city:"Sfax", group:"music", url:"https://streaming.diwanfm.net/stream", c:"#8A9A5B", kbps:128, logo:"logos/diwan.png" },
   { id:"express", name:"Express FM", city:"Tunis", group:"music", url:"https://expressfm.ice.infomaniak.ch/expressfm-64.mp3", c:"#4C5FD5", kbps:64, logo:"logos/express.png" },
   { id:"knooz", name:"KnOOz FM", city:"Tunis", group:"music", url:"https://streaming.knoozfm.net/knoozfm", c:"#8E4A8B", kbps:128, logo:"logos/knooz.png" },
@@ -434,14 +458,14 @@ const STATIONS = [
   { id:"mosaique-gold", name:"Mosaïque Gold", city:"Tunis", group:"music", url:"https://radio.mosaiquefm.net/mosagold", c:"#A8813F", kbps:128, mono:"GLD" },
   { id:"mosaique-tounsi", name:"Mosaïque Tounsi", city:"Tunis", group:"music", url:"https://radio.mosaiquefm.net/mosatounsi", c:"#C2446A", kbps:128, mono:"TNS" },
   { id:"mosaique-dj", name:"Mosaïque DJ", city:"Tunis", group:"music", url:"https://radio.mosaiquefm.net/mosadj", c:"#7A5CC4", kbps:128, mono:"DJ" },
-  { id:"jeunes", name:"Radio Jeunes", city:"Tunis", group:"national", url:"https://radio.radiotunisienne.tn/jeunes", c:"#3C8F6E", kbps:128 },
-  { id:"culturelle", name:"Radio Culturelle", city:"Tunis", group:"national", url:"https://radio.radiotunisienne.tn/culturelle", c:"#9C6B3E", kbps:128 },
-  { id:"zitouna", name:"Radio Zitouna", city:"Tunis", group:"national", url:"https://radio.radiotunisienne.tn/radiozaitouna", c:"#2F7A54", kbps:192 },
-  { id:"sfax", name:"Radio Sfax", city:"Sfax", group:"national", url:"https://radio.radiotunisienne.tn/sfax", c:"#A9563F", kbps:128 },
-  { id:"monastir", name:"Radio Monastir", city:"Monastir", group:"national", url:"https://radio.radiotunisienne.tn/monastir", c:"#35708C", kbps:128 },
-  { id:"gafsa", name:"Radio Gafsa", city:"Gafsa", group:"national", url:"https://radio.radiotunisienne.tn/gafsa", c:"#B0862F", kbps:128 },
-  { id:"kef", name:"Radio Le Kef", city:"Le Kef", group:"national", url:"https://radio.radiotunisienne.tn/kef", c:"#5F7A3C", kbps:128 },
-  { id:"tataouine", name:"Radio Tataouine", city:"Tataouine", group:"national", url:"https://radio.radiotunisienne.tn/tataouine", c:"#8C5A6E", kbps:64, mono:"TA" },
+  { id:"jeunes", name:"Radio Jeunes", city:"Tunis", group:"national", url:"https://radio.radiotunisienne.tn/jeunes", c:"#3C8F6E", kbps:128 , logo:"logos/rt-jeunes.svg" },
+  { id:"culturelle", name:"Radio Culturelle", city:"Tunis", group:"national", url:"https://radio.radiotunisienne.tn/culturelle", c:"#9C6B3E", kbps:128 , logo:"logos/rt-culturelle.svg" },
+  { id:"zitouna", name:"Radio Zitouna", city:"Tunis", group:"national", url:"https://radio.radiotunisienne.tn/radiozaitouna", c:"#2F7A54", kbps:192 , logo:"logos/rt-zitouna.svg" },
+  { id:"sfax", name:"Radio Sfax", city:"Sfax", group:"national", url:"https://radio.radiotunisienne.tn/sfax", c:"#A9563F", kbps:128 , logo:"logos/rt-sfax.svg" },
+  { id:"monastir", name:"Radio Monastir", city:"Monastir", group:"national", url:"https://radio.radiotunisienne.tn/monastir", c:"#35708C", kbps:128 , logo:"logos/rt-monastir.svg" },
+  { id:"gafsa", name:"Radio Gafsa", city:"Gafsa", group:"national", url:"https://radio.radiotunisienne.tn/gafsa", c:"#B0862F", kbps:128 , logo:"logos/rt-gafsa.svg" },
+  { id:"kef", name:"Radio Le Kef", city:"Le Kef", group:"national", url:"https://radio.radiotunisienne.tn/kef", c:"#5F7A3C", kbps:128 , logo:"logos/rt-kef.svg" },
+  { id:"tataouine", name:"Radio Tataouine", city:"Tataouine", group:"national", url:"https://radio.radiotunisienne.tn/tataouine", c:"#8C5A6E", kbps:64, mono:"TA" , logo:"logos/rt-tataouine.svg" },
   { id:"sabra", name:"Sabra FM", city:"Sfax", group:"music", url:"https://manager5.streamradio.fr:1905/stream", c:"#C77F2E", kbps:192 },
   { id:"misk", name:"Misk FM", city:"Tunis", group:"music", url:"https://live.misk.art/stream", c:"#3F8FA3", kbps:192, logo:"logos/misk.png" },
   { id:"alhayet", name:"Al Hayet FM", city:"Tunis", group:"music", url:"https://manager8.streamradio.fr:2885/stream", c:"#A05A8E", kbps:192 },
@@ -502,7 +526,9 @@ const S = {
   status: "idle",
   preview: null,
   editingList: null,
-  dirResults: []
+  dirResults: [],
+  dirLoading: false,
+  dirLimit: 12
 };
 if (!Array.isArray(S.custom)) S.custom = [];
 if (!Array.isArray(S.lists)) S.lists = [];
@@ -801,8 +827,10 @@ if ("mediaSession" in navigator) {
     previoustrack: () => step(-1),
     // Live radio can't be scrubbed; removing these stops iOS offering
     // useless −10s/+10s buttons and lets it fall back to prev/next.
-    seekbackward: null,
-    seekforward: null,
+    // iOS keeps showing −10s/+10s on live streams and ignores attempts to
+    // remove them, so point them at the previous/next station instead.
+    seekbackward: () => step(-1),
+    seekforward: () => step(1),
     seekto: null
   };
   for (const [k, fn] of Object.entries(handlers)) {
@@ -900,6 +928,7 @@ function openSheet() {
   showSheetView("home");
   renderCustomList();
   renderListRows();
+  if (!S.dirResults.length) loadDirectory(false);
 }
 function closeSheet() {
   sheet.classList.remove("open");
@@ -910,7 +939,7 @@ function closeSheet() {
 function showSheetView(view) {
   $("sheetHome").hidden = view !== "home";
   $("sheetLists").hidden = view !== "lists";
-  sheet.scrollTop = 0;
+  $("sheetBody").scrollTop = 0;
 }
 
 function renderListRows() {
@@ -964,70 +993,87 @@ function renderCustomList() {
 /* ============================================================
    Live directory (radio-browser.info)
    ============================================================ */
+let dirView = [];
+const inList = (url) => allStations().find((s) => s.url === url) || null;
+
 function renderDirectory() {
   const box = $("dirList");
-  if (!S.dirResults.length) { box.innerHTML = ""; return; }
+  const q = ($("dirSearch").value || "").trim().toLowerCase();
+  const all = S.dirResults || [];
 
-  box.innerHTML = S.dirResults.map((r, i) => {
-    const have = allStations().find((s) => s.url === r.url);
+  const rows = all.filter((r) =>
+    !q || r.name.toLowerCase().indexOf(q) !== -1 || (r.tags || "").toLowerCase().indexOf(q) !== -1);
+  dirView = rows;
+
+  const missing = rows.filter((r) => !inList(r.url)).length;
+  $("dirCount").textContent = !all.length
+    ? "Directory unreachable — tap Refresh"
+    : rows.length + (q ? " of " + all.length : "") + " playable · " + missing + " not in your list";
+
+  if (!rows.length) {
+    box.innerHTML = '<p class="note">' + (q ? "Nothing matches “" + esc(q) + "”." : "No stations found.") + "</p>";
+    return;
+  }
+
+  const shown = rows.slice(0, S.dirLimit);
+  box.innerHTML = shown.map((r, i) => {
+    const have = inList(r.url);
     const removable = have && String(have.id).startsWith("custom-");
     const label = removable ? "Remove" : have ? "Added" : "Add";
     return '<div class="st dir" data-i="' + i + '" role="button" tabindex="0" style="--c:#3F8FA3" aria-label="Preview ' + esc(r.name) + '">' +
       avatar(r, "dot") +
       '<span class="txt"><span class="nm">' + esc(r.name) + '</span>' +
-      '<span class="sub">' + esc(removable ? "In your list · tap to preview" : "Tap to preview") + "</span></span>" +
+      '<span class="sub">' + (have ? "In your list" : "Tap to listen") + "</span></span>" +
       '<button class="btn small' + (removable ? " ghostbtn" : "") + '" data-act="' + i + '"' +
       (have && !removable ? " disabled" : "") + ">" + label + "</button></div>";
-  }).join("");
+  }).join("") + (rows.length > S.dirLimit
+      ? '<button class="btn wide" id="showAllDir" style="margin-top:8px">Show all ' + rows.length + " stations</button>"
+      : "");
 }
 
-function previewDir(i) {
-  const r = S.dirResults[i];
-  if (!r) return;
-  S.preview = { id: PREVIEW_ID, name: r.name, city: "Preview", group: "music", url: r.url, c: "#3F8FA3", kbps: 0 };
-  playStation(S.preview);
-  renderDirectory();
-}
-
-async function browseDirectory(btn) {
-  const box = $("dirList");
-  btn.disabled = true;
-  btn.textContent = "Searching…";
-  box.innerHTML = "";
+async function loadDirectory(force) {
+  if (S.dirLoading) return;
+  if (S.dirResults.length && !force) { renderDirectory(); return; }
+  S.dirLoading = true;
+  $("dirCount").textContent = "Loading…";
   try {
     const r = await fetch("https://de1.api.radio-browser.info/json/stations/bycountrycodeexact/TN?hidebroken=true&order=clickcount&reverse=true&limit=250");
     if (!r.ok) throw new Error("HTTP " + r.status);
     const data = await r.json();
-    const seen = new Set(allStations().map((s) => s.url));
-    // The community directory also lists hundreds of non-stop recitation
-    // feeds and a few dead hosts; those aren't radio stations, so skip them.
-    const NOISE_HOST = /qurango|al7eah|shoutca\.st|radiojar|zeno\.fm/i;
-    const NOISE_NAME = /قرآن|القرآن|تراتيل|أذكار|أذان|السيرة|الصحابة|رمضان|فتاوى|ميراث|قراءات|الشيخ|عاشوراء|شوال|السكينة|الأنبياء|quran|coran|sodais|sudaes|bukhatir|abbad/i;
+    const seen = new Set();
+    // only what an iPhone can actually play
     S.dirResults = data.filter((s) => {
       const u = s.url_resolved || s.url || "";
       const codec = String(s.codec || "").toUpperCase();
-      const name = s.name || "";
-      if (!u.startsWith("https://") || s.hls) return false;
-      if (!(codec === "MP3" || codec.startsWith("AAC"))) return false;
-      return !NOISE_HOST.test(u) && !NOISE_NAME.test(name);
+      return u.startsWith("https://") && !s.hls && (codec === "MP3" || codec.startsWith("AAC"));
     }).map((s) => ({
-      id: "dir-" + s.stationuuid, name: s.name, url: s.url_resolved || s.url,
-      c: "#3F8FA3", sub: s.country || "Tunisia"
-    })).filter((r2) => {
-      if (seen.has(r2.url)) return false;
-      seen.add(r2.url);
+      id: "dir-" + s.stationuuid,
+      name: s.name,
+      url: s.url_resolved || s.url,
+      c: "#3F8FA3",
+      tags: (s.tags || "") + " " + (s.city || ""),
+      count: s.clickcount || 0
+    })).filter((x) => {
+      if (!x.url || seen.has(x.url)) return false;
+      seen.add(x.url);
       return true;
-    }).slice(0, 30);
-    renderDirectory();
-    if (!S.dirResults.length) box.innerHTML = '<p class="note">No new stations found right now.</p>';
-    // bring the results into view: the sheet is long
-    try { sheet.scrollTo({ top: box.offsetTop - 70, behavior: "smooth" }); } catch { sheet.scrollTop = box.offsetTop - 70; }
-  } catch (err) {
-    box.innerHTML = '<p class="note">Directory unreachable right now. You can still add a station by link.</p>';
+    });
+    // one stable order per session: stations you don't have yet come first
+    S.dirResults.sort((a, b) => (inList(a.url) ? 1 : 0) - (inList(b.url) ? 1 : 0) || (b.count || 0) - (a.count || 0));
+  } catch (e) {
+    S.dirResults = [];
   } finally {
-    btn.disabled = false;
-    btn.textContent = "Browse directory";
+    S.dirLoading = false;
+    renderDirectory();
   }
+}
+
+function previewDir(i) {
+  const r = dirView[i];
+  if (!r) return;
+  S.preview = { id: PREVIEW_ID, name: r.name, city: "Preview", group: "music", url: r.url, c: "#3F8FA3", kbps: 0 };
+  playStation(S.preview);
+  renderDirectory();
 }
 
 /* ============================================================
@@ -1136,16 +1182,18 @@ $("btnAddManual").addEventListener("click", () => {
   if (msg === "Added.") { $("inName").value = ""; $("inUrl").value = ""; renderCustomList(); }
 });
 
-$("btnBrowse").addEventListener("click", (e) => browseDirectory(e.currentTarget));
+$("btnBrowse").addEventListener("click", () => loadDirectory(true));
+$("dirSearch").addEventListener("input", () => { S.dirLimit = 12; renderDirectory(); });
 
 $("dirList").addEventListener("click", (e) => {
+  if (e.target.closest("#showAllDir")) { S.dirLimit = 999; renderDirectory(); return; }
   const act = e.target.closest("[data-act]");
   if (act) {
     e.stopPropagation();
     const i = Number(act.dataset.act);
-    const r = S.dirResults[i];
+    const r = dirView[i];
     if (!r) return;
-    const have = allStations().find((s) => s.url === r.url);
+    const have = inList(r.url);
     if (have && String(have.id).startsWith("custom-")) removeStation(have.id);
     else if (!have) addStation(r.name, r.url);
     renderDirectory();
