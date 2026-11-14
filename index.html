@@ -23,7 +23,7 @@
     --safe-b:env(safe-area-inset-bottom, 0px);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html,body{height:100%}
+  html,body{height:100%;overflow-x:hidden}
   html{-webkit-text-size-adjust:100%}
   body{
     margin:0; background:var(--bg); color:var(--tx);
@@ -57,8 +57,9 @@
   /* ---------- hero ---------- */
   .hero{padding:6px 18px 14px;position:relative}
   .hero .row{display:flex;align-items:center;gap:14px}
+  .artwrap{width:76px;height:76px;flex:0 0 76px}
   .art{
-    width:76px;height:76px;flex:0 0 76px;border-radius:22px;display:grid;place-items:center;
+    width:100%;height:100%;border-radius:22px;display:grid;place-items:center;position:relative;overflow:hidden;
     background:linear-gradient(150deg,color-mix(in srgb,var(--c) 26%,#15151a),color-mix(in srgb,var(--c) 9%,#101014));
     border:1px solid color-mix(in srgb,var(--c) 38%,#26262e);
     color:var(--c); font-weight:760; font-size:25px; letter-spacing:-.5px;
@@ -91,11 +92,12 @@
   }
 
   /* ---------- chips ---------- */
-  .chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px 18px 12px;
+  .chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px 18px 12px;
          position:sticky;top:calc(env(safe-area-inset-top,0px) + 62px);z-index:20;
          background:linear-gradient(180deg,var(--bg) 55%,rgba(8,8,10,0))}
   .chips::-webkit-scrollbar{display:none}
-  .chip{flex:0 0 auto;padding:9px 16px;border-radius:999px;font-size:13px;font-weight:620;
+  .chips{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 22px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 22px),transparent)}
+  .chip{flex:0 0 auto;padding:8px 13px;border-radius:999px;font-size:12.5px;font-weight:620;
         background:var(--card);border:1px solid var(--line);color:var(--mut);white-space:nowrap}
   .chip[aria-pressed="true"]{background:var(--tx);border-color:var(--tx);color:#0A0A0C}
 
@@ -108,15 +110,15 @@
     border:1px solid transparent;transition:background .18s,border-color .18s,transform .1s;
   }
   .st:active{transform:scale(.988);background:var(--card2)}
-  .st .dot{
-    width:44px;height:44px;flex:0 0 44px;border-radius:14px;display:grid;place-items:center;
+  .dot{
+    width:44px;height:44px;flex:0 0 44px;border-radius:14px;display:grid;place-items:center;position:relative;overflow:hidden;
     font-size:14px;font-weight:740;letter-spacing:-.3px;
     background:color-mix(in srgb,var(--c) 16%,#15151a);color:var(--c);
     border:1px solid color-mix(in srgb,var(--c) 26%,#26262e);
   }
-  .st .txt{min-width:0;flex:1}
-  .st .nm{display:block;font-size:16.5px;font-weight:640;letter-spacing:-.2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .st .sub{display:block;font-size:12.5px;color:var(--dim);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .txt{min-width:0;flex:1}
+  .nm{display:block;font-size:16.5px;font-weight:640;letter-spacing:-.2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sub{display:block;font-size:12.5px;color:var(--dim);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .st.on{background:var(--card2);border-color:color-mix(in srgb,var(--c) 34%,#26262e)}
   .st.on .nm{color:#fff}
   .st.on .dot{box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 16%,transparent)}
@@ -131,6 +133,33 @@
   .st .fav svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linejoin:round}
   .st .fav[aria-pressed="true"]{color:var(--gold)}
   .st .fav[aria-pressed="true"] svg{fill:var(--gold);stroke:var(--gold)}
+  /* real broadcaster logos sit on a light tile; monograms keep the brand tint */
+  .art.has-logo,.dot.has-logo{background:#F4F0EA;border-color:color-mix(in srgb,var(--c) 26%,#cfc9c0)}
+  .art.has-logo img,.dot.has-logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:11px}
+  .dot.has-logo img{padding:5px}
+  [hidden]{display:none!important}
+
+  /* list editor + rows inside the settings sheet */
+  .shead{display:flex;align-items:center;gap:12px;margin:4px 0 4px}
+  .shead h2{margin:0!important}
+  .listtitle{flex:1;min-width:0;background:transparent;border:1px solid transparent;border-radius:9px;
+             color:var(--tx);font:600 17px/1.2 inherit;padding:7px 9px;-webkit-appearance:none}
+  .listtitle:focus{outline:none;border-color:#33333D;background:#15151A}
+  .lrow{display:flex;align-items:center;gap:9px;padding:12px 0;border-bottom:1px solid #1C1C23}
+  .lname{font-size:15.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lcount{font-size:12px;color:var(--dim);margin-top:2px}
+  .btn.small{padding:9px 14px;font-size:13.5px}
+  .btn.ghostbtn{background:transparent;border-color:#2E2E38;color:var(--mut)}
+  .picks{display:grid;gap:6px;padding-bottom:10px}
+  .pick{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:9px 11px;
+        border-radius:16px;background:var(--card);border:1px solid transparent;cursor:pointer}
+  .pick:active{background:var(--card2)}
+  .pick.on{border-color:color-mix(in srgb,var(--c) 45%,#26262e);background:var(--card2)}
+  .pick .box{width:24px;height:24px;flex:0 0 24px;border-radius:8px;border:1.6px solid #3A3A44;display:grid;place-items:center}
+  .pick.on .box{background:var(--red);border-color:var(--red)}
+  .pick .box svg{width:15px;height:15px;display:none}
+  .pick.on .box svg{display:block}
+  .chip.add{border-style:dashed}
   .empty{text-align:center;color:var(--dim);font-size:14px;padding:34px 20px;line-height:1.5}
 
   /* ---------- transport bar ---------- */
@@ -177,7 +206,9 @@
     -webkit-overflow-scrolling:touch;
   }
   .sheet.open{transform:translateY(0)}
-  .grab{width:38px;height:4px;border-radius:99px;background:#33333D;margin:8px auto 16px}
+  .sheetbar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;position:sticky;top:0;z-index:3;
+             background:#0D0D11;padding:6px 0 10px;margin:-8px 0 4px}
+  .grab{width:38px;height:4px;border-radius:99px;background:#33333D;margin:0 auto;border:0;padding:0;display:block}
   .sheet h2{font-size:13px;letter-spacing:.11em;text-transform:uppercase;color:var(--mut);margin:22px 0 10px;font-weight:680}
   .sheet h2:first-of-type{margin-top:6px}
   .srow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #1C1C23}
@@ -233,7 +264,8 @@
     .icon-btn svg{width:17px;height:17px}
     .hero{padding:0 16px 8px}
     .hero .row{gap:11px}
-    .art{width:48px;height:48px;flex-basis:48px;border-radius:14px;font-size:17px}
+    .artwrap{width:48px;height:48px;flex-basis:48px}
+    .art{border-radius:14px;font-size:17px}
     .hero h1{font-size:19.5px;margin-bottom:1px}
     .eyebrow{font-size:10.5px;letter-spacing:.09em;margin-bottom:2px}
     .meta{display:none}
@@ -275,13 +307,13 @@
   </div>
   <div class="spacer"></div>
   <button class="icon-btn" id="btnSettings" aria-label="Settings">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2V21a2 2 0 1 1-4 0v-.1A1.7 1.7 0 0 0 7 19.4a1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9H1a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 2.6 7a1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H7a1.7 1.7 0 0 0 1-1.5V1a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V7a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
   </button>
 </header>
 
 <section class="hero" id="hero" data-status="idle">
   <div class="row">
-    <div class="art idle" id="heroArt">—</div>
+    <div class="artwrap" id="heroArtWrap"></div>
     <div style="min-width:0;flex:1">
       <div class="eyebrow"><span class="livedot"></span><span id="heroStatus">Ready</span></div>
       <h1 id="heroName">Pick a station</h1>
@@ -291,12 +323,7 @@
   </div>
 </section>
 
-<div class="chips" role="tablist" aria-label="Filter stations">
-  <button class="chip" data-filter="all" aria-pressed="true">All</button>
-  <button class="chip" data-filter="fav" aria-pressed="false">My list</button>
-  <button class="chip" data-filter="music" aria-pressed="false">Music</button>
-  <button class="chip" data-filter="national" aria-pressed="false">National</button>
-</div>
+<div class="chips" id="chips" role="tablist" aria-label="Filter stations"></div>
 
 <div class="hint" id="hint">
   <div>
@@ -332,37 +359,56 @@
 
 <div class="scrim" id="scrim"></div>
 <div class="sheet" id="sheet" role="dialog" aria-label="Settings">
-  <div class="grab"></div>
+  <div class="sheetbar">
+    <span></span>
+    <button class="grab" id="grabClose" aria-label="Close settings"></button>
+    <button class="btn small" id="btnCloseSheet" style="justify-self:end">Done</button>
+  </div>
 
-  <h2>While driving</h2>
-  <div class="srow">
-    <div>
-      <div class="lbl">Keep screen on</div>
-      <div class="hint">Stops the phone locking while the app is open. Uses more battery.</div>
+  <div id="sheetHome">
+    <h2>While driving</h2>
+    <div class="srow">
+      <div>
+        <div class="lbl">Keep screen on</div>
+        <div class="hint">Stops the phone locking while the app is open. Uses more battery.</div>
+      </div>
+      <button class="switch" id="swWake" role="switch" aria-checked="false" aria-label="Keep screen on"></button>
     </div>
-    <button class="switch" id="swWake" role="switch" aria-checked="false" aria-label="Keep screen on"></button>
+
+    <h2>My lists</h2>
+    <p class="note"><b>My list</b> is your favourites. Build your own lists here — each one appears as a
+      button at the top of the screen, so you can switch between, say, <i>Morning</i> and <i>Football</i>.</p>
+    <div id="listRows"></div>
+    <div class="field">
+      <input id="inListName" placeholder="New list name" autocomplete="off" autocapitalize="words" maxlength="28">
+      <button class="btn red" id="btnNewList">Create</button>
+    </div>
+    <p class="note" id="listMsg" style="display:none"></p>
+
+    <h2>Add a station</h2>
+    <div class="field">
+      <input id="inName" placeholder="Name" autocomplete="off" autocapitalize="words">
+      <input id="inUrl" placeholder="https://…/stream.mp3" autocomplete="off" autocapitalize="off" spellcheck="false">
+    </div>
+    <button class="btn wide" id="btnAddManual">Add station</button>
+    <p class="note" id="addMsg" style="display:none"></p>
+
+    <h2>Find more Tunisian stations</h2>
+    <p class="note">From the community directory (radio-browser.info). <b>Tap a row to listen before adding</b>,
+      then use the button on the right to keep or drop it.</p>
+    <button class="btn wide" id="btnBrowse">Browse directory</button>
+    <div class="dirlist" id="dirList"></div>
+
+    <h2>My added stations</h2>
+    <div id="customList"><p class="note">None yet. Stations you add appear here.</p></div>
+
+    <p class="about">
+      <strong>Tounsi Radio</strong> — a personal radio for the road. Streams are live broadcasts hosted by
+      the stations themselves; this app only tunes into them. Station logos belong to the broadcasters.
+    </p>
   </div>
 
-  <h2>Add a station</h2>
-  <div class="field">
-    <input id="inName" placeholder="Name" autocomplete="off" autocapitalize="words">
-    <input id="inUrl" placeholder="https://…/stream.mp3" autocomplete="off" autocapitalize="off" spellcheck="false">
-  </div>
-  <button class="btn wide" id="btnAddManual">Add station</button>
-  <p class="note" id="addMsg" style="display:none"></p>
-
-  <h2>Find more Tunisian stations</h2>
-  <p class="note">Searches the community radio directory (radio-browser.info) for Tunisian streams that will play on iPhone.</p>
-  <button class="btn wide" id="btnBrowse">Browse directory</button>
-  <div class="dirlist" id="dirList"></div>
-
-  <h2>My added stations</h2>
-  <div id="customList"><p class="note">None yet.</p></div>
-
-  <p class="about">
-    <strong>Tounsi Radio</strong> — a personal radio for the road. Streams are live broadcasts hosted by
-    the stations themselves; this app only tunes into them. Built as an offline-capable web app.
-  </p>
+  <div id="sheetLists" hidden></div>
 </div>
 
 <audio id="audio" playsinline preload="none" x-webkit-airplay="allow"></audio>
@@ -371,37 +417,41 @@
 "use strict";
 
 /* ============================================================
-   Station list — every URL below was verified live (HTTPS, MP3).
+   Stations. `logo` = official artwork where the broadcaster has
+   a distinctive mark; otherwise a colour-coded monogram is used
+   (the national network ships one shared design for all ten
+   channels, so its logos are indistinguishable at 44px).
    ============================================================ */
 const STATIONS = [
-  { id:"mosaique",       name:"Mosaïque FM",        city:"Tunis",    group:"music",    url:"https://radio.mosaiquefm.net/mosalive",                       c:"#E70013", kbps:112 },
-  { id:"jawhara",        name:"Jawhara FM",         city:"Sousse",   group:"music",    url:"https://streaming2.toutech.net/jawharafm",                    c:"#D95B2B", kbps:128 },
-  { id:"nationale",      name:"Radio Nationale",    city:"Tunis",    group:"national", url:"https://radio.radiotunisienne.tn/nationale",                  c:"#C8963E", kbps:128 },
-  { id:"rtci",           name:"RTCI",               city:"Tunis",    group:"national", url:"https://radio.radiotunisienne.tn/rtci",                       c:"#2C7DA0", kbps:128 },
-  { id:"diwan",          name:"Diwan FM",           city:"Sfax",     group:"music",    url:"https://streaming.diwanfm.net/stream",                        c:"#8A9A5B", kbps:128 },
-  { id:"express",        name:"Express FM",         city:"Tunis",    group:"music",    url:"https://expressfm.ice.infomaniak.ch/expressfm-64.mp3",        c:"#4C5FD5", kbps:64  },
-  { id:"knooz",          name:"KnOOz FM",           city:"Tunis",    group:"music",    url:"https://streaming.knoozfm.net/knoozfm",                       c:"#8E4A8B", kbps:128 },
-  { id:"mosaique-tarab", name:"Mosaïque Tarab",     city:"Tunis",    group:"music",    url:"https://radio.mosaiquefm.net/mosatarab",                      c:"#B5573C", kbps:128 },
-  { id:"mosaique-gold",  name:"Mosaïque Gold",      city:"Tunis",    group:"music",    url:"https://radio.mosaiquefm.net/mosagold",                       c:"#A8813F", kbps:128 },
-  { id:"mosaique-tounsi",name:"Mosaïque Tounsi",    city:"Tunis",    group:"music",    url:"https://radio.mosaiquefm.net/mosatounsi",                     c:"#C2446A", kbps:128 },
-  { id:"mosaique-dj",    name:"Mosaïque DJ",        city:"Tunis",    group:"music",    url:"https://radio.mosaiquefm.net/mosadj",                         c:"#7A5CC4", kbps:128 },
-  { id:"jeunes",         name:"Radio Jeunes",       city:"Tunis",    group:"national", url:"https://radio.radiotunisienne.tn/jeunes",                     c:"#3C8F6E", kbps:128 },
-  { id:"culturelle",     name:"Radio Culturelle",   city:"Tunis",    group:"national", url:"https://radio.radiotunisienne.tn/culturelle",                 c:"#9C6B3E", kbps:128 },
-  { id:"zitouna",        name:"Radio Zitouna",      city:"Tunis",    group:"national", url:"https://radio.radiotunisienne.tn/radiozaitouna",              c:"#2F7A54", kbps:192 },
-  { id:"sfax",           name:"Radio Sfax",         city:"Sfax",     group:"national", url:"https://radio.radiotunisienne.tn/sfax",                       c:"#A9563F", kbps:128 },
-  { id:"monastir",       name:"Radio Monastir",     city:"Monastir", group:"national", url:"https://radio.radiotunisienne.tn/monastir",                   c:"#35708C", kbps:128 },
-  { id:"gafsa",          name:"Radio Gafsa",        city:"Gafsa",    group:"national", url:"https://radio.radiotunisienne.tn/gafsa",                      c:"#B0862F", kbps:128 },
-  { id:"kef",            name:"Radio Le Kef",       city:"Le Kef",   group:"national", url:"https://radio.radiotunisienne.tn/kef",                        c:"#5F7A3C", kbps:128 },
-  { id:"tataouine",      name:"Radio Tataouine",    city:"Tataouine",group:"national", url:"https://radio.radiotunisienne.tn/tataouine",                  c:"#8C5A6E", kbps:64  },
-  { id:"sabra",          name:"Sabra FM",           city:"Sfax",     group:"music",    url:"https://manager5.streamradio.fr:1905/stream",                 c:"#C77F2E", kbps:192 },
-  { id:"misk",           name:"Misk FM",            city:"Tunis",    group:"music",    url:"https://live.misk.art/stream",                                c:"#3F8FA3", kbps:192 },
-  { id:"alhayet",        name:"Al Hayet FM",        city:"Tunis",    group:"music",    url:"https://manager8.streamradio.fr:2885/stream",                 c:"#A05A8E", kbps:192 },
+  { id:"mosaique", name:"Mosaïque FM", city:"Tunis", group:"music", url:"https://radio.mosaiquefm.net/mosalive", c:"#E70013", kbps:112, logo:"logos/mosaique.png" },
+  { id:"jawhara", name:"Jawhara FM", city:"Sousse", group:"music", url:"https://streaming2.toutech.net/jawharafm", c:"#D95B2B", kbps:128, logo:"logos/jawhara.png" },
+  { id:"nationale", name:"Radio Nationale", city:"Tunis", group:"national", url:"https://radio.radiotunisienne.tn/nationale", c:"#C8963E", kbps:128 },
+  { id:"rtci", name:"RTCI", city:"Tunis", group:"national", url:"https://radio.radiotunisienne.tn/rtci", c:"#2C7DA0", kbps:128 },
+  { id:"diwan", name:"Diwan FM", city:"Sfax", group:"music", url:"https://streaming.diwanfm.net/stream", c:"#8A9A5B", kbps:128, logo:"logos/diwan.png" },
+  { id:"express", name:"Express FM", city:"Tunis", group:"music", url:"https://expressfm.ice.infomaniak.ch/expressfm-64.mp3", c:"#4C5FD5", kbps:64, logo:"logos/express.png" },
+  { id:"knooz", name:"KnOOz FM", city:"Tunis", group:"music", url:"https://streaming.knoozfm.net/knoozfm", c:"#8E4A8B", kbps:128, logo:"logos/knooz.png" },
+  { id:"mosaique-tarab", name:"Mosaïque Tarab", city:"Tunis", group:"music", url:"https://radio.mosaiquefm.net/mosatarab", c:"#B5573C", kbps:128, mono:"TRB" },
+  { id:"mosaique-gold", name:"Mosaïque Gold", city:"Tunis", group:"music", url:"https://radio.mosaiquefm.net/mosagold", c:"#A8813F", kbps:128, mono:"GLD" },
+  { id:"mosaique-tounsi", name:"Mosaïque Tounsi", city:"Tunis", group:"music", url:"https://radio.mosaiquefm.net/mosatounsi", c:"#C2446A", kbps:128, mono:"TNS" },
+  { id:"mosaique-dj", name:"Mosaïque DJ", city:"Tunis", group:"music", url:"https://radio.mosaiquefm.net/mosadj", c:"#7A5CC4", kbps:128, mono:"DJ" },
+  { id:"jeunes", name:"Radio Jeunes", city:"Tunis", group:"national", url:"https://radio.radiotunisienne.tn/jeunes", c:"#3C8F6E", kbps:128 },
+  { id:"culturelle", name:"Radio Culturelle", city:"Tunis", group:"national", url:"https://radio.radiotunisienne.tn/culturelle", c:"#9C6B3E", kbps:128 },
+  { id:"zitouna", name:"Radio Zitouna", city:"Tunis", group:"national", url:"https://radio.radiotunisienne.tn/radiozaitouna", c:"#2F7A54", kbps:192 },
+  { id:"sfax", name:"Radio Sfax", city:"Sfax", group:"national", url:"https://radio.radiotunisienne.tn/sfax", c:"#A9563F", kbps:128 },
+  { id:"monastir", name:"Radio Monastir", city:"Monastir", group:"national", url:"https://radio.radiotunisienne.tn/monastir", c:"#35708C", kbps:128 },
+  { id:"gafsa", name:"Radio Gafsa", city:"Gafsa", group:"national", url:"https://radio.radiotunisienne.tn/gafsa", c:"#B0862F", kbps:128 },
+  { id:"kef", name:"Radio Le Kef", city:"Le Kef", group:"national", url:"https://radio.radiotunisienne.tn/kef", c:"#5F7A3C", kbps:128 },
+  { id:"tataouine", name:"Radio Tataouine", city:"Tataouine", group:"national", url:"https://radio.radiotunisienne.tn/tataouine", c:"#8C5A6E", kbps:64, mono:"TA" },
+  { id:"sabra", name:"Sabra FM", city:"Sfax", group:"music", url:"https://manager5.streamradio.fr:1905/stream", c:"#C77F2E", kbps:192 },
+  { id:"misk", name:"Misk FM", city:"Tunis", group:"music", url:"https://live.misk.art/stream", c:"#3F8FA3", kbps:192, logo:"logos/misk.png" },
+  { id:"alhayet", name:"Al Hayet FM", city:"Tunis", group:"music", url:"https://manager8.streamradio.fr:2885/stream", c:"#A05A8E", kbps:192 },
 ];
 
 const SEED_FAVS = ["mosaique", "jawhara", "nationale", "rtci"];
+const PREVIEW_ID = "__preview";
 
 /* ============================================================
-   Small helpers
+   Helpers
    ============================================================ */
 const $ = (id) => document.getElementById(id);
 const audio = $("audio");
@@ -411,45 +461,91 @@ const store = {
   set(k, v) { try { localStorage.setItem("tr." + k, JSON.stringify(v)); } catch {} }
 };
 
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+}
+
 const initials = (name) => {
-  const w = name.replace(/[^\p{L}\p{N} ]/gu, " ").split(/\s+/).filter(Boolean);
+  const w = String(name).replace(/[^\p{L}\p{N} ]/gu, " ").split(/\s+/).filter(Boolean);
   if (!w.length) return "?";
   if (w.length === 1) return w[0].slice(0, 2).toUpperCase();
   return (w[0][0] + w[1][0]).toUpperCase();
 };
 
+const monoFor = (st) => st && st.mono ? st.mono : initials(st ? st.name : "?");
+
+/* Avatar: official logo on a light tile, with the monogram kept as a
+   hidden fallback so a missing/blocked image degrades gracefully. */
+function avatar(st, cls) {
+  const c = (st && st.c) || "#8E8B87";
+  const mono = esc(monoFor(st).slice(0, 3));
+  const size = mono.length >= 3 ? ' style="font-size:.72em"' : "";
+  if (st && st.logo) {
+    return '<div class="' + cls + ' has-logo" style="--c:' + c + '">' +
+      '<img src="' + esc(st.logo) + '" alt="" loading="lazy"' +
+      ' onerror="this.hidden=true;this.nextElementSibling.hidden=false">' +
+      '<span class="mono" hidden' + size + '>' + mono + '</span></div>';
+  }
+  return '<div class="' + cls + '" style="--c:' + c + '"><span class="mono"' + size + '>' + mono + '</span></div>';
+}
+
+/* ============================================================
+   State
+   ============================================================ */
 const S = {
   stationId: store.get("last", null),
-  filter: "all",
+  filter: store.get("filter", "all"),
   favs: new Set(store.get("favs", SEED_FAVS)),
   custom: store.get("custom", []),
+  lists: store.get("lists", []),
   wake: store.get("wake", false),
   status: "idle",
+  preview: null,
+  editingList: null,
+  dirResults: []
 };
-if (S.custom.some((s) => !s || !s.url)) S.custom = [];
+if (!Array.isArray(S.custom)) S.custom = [];
+if (!Array.isArray(S.lists)) S.lists = [];
+S.custom = S.custom.filter((s) => s && s.url && s.id);
+S.lists = S.lists.filter((l) => l && l.id && Array.isArray(l.items));
 
 const allStations = () => STATIONS.concat(S.custom);
-const byId = (id) => allStations().find((s) => s.id === id) || null;
+const byId = (id) => (id === PREVIEW_ID ? S.preview : allStations().find((s) => s.id === id) || null);
 const current = () => byId(S.stationId);
-const visible = () => {
+
+function visible() {
   const all = allStations();
   if (S.filter === "fav") return all.filter((s) => S.favs.has(s.id));
   if (S.filter === "music" || S.filter === "national") return all.filter((s) => s.group === S.filter);
+  if (S.filter.indexOf("list:") === 0) {
+    const l = S.lists.find((x) => "list:" + x.id === S.filter);
+    if (!l) return [];
+    return l.items.map((id) => all.find((s) => s.id === id)).filter(Boolean);
+  }
   return all;
+}
+
+const persist = {
+  favs: () => store.set("favs", [...S.favs]),
+  custom: () => store.set("custom", S.custom),
+  lists: () => store.set("lists", S.lists),
+  filter: () => store.set("filter", S.filter)
 };
 
 /* ============================================================
    Rendering
    ============================================================ */
 const STATUS_TEXT = {
-  idle: "Ready",
-  loading: "Connecting…",
-  playing: "Live now",
-  buffering: "Buffering…",
-  reconnecting: "Reconnecting…",
-  paused: "Paused",
-  error: "Station unavailable",
+  idle: "Ready", loading: "Connecting…", playing: "Live now", buffering: "Buffering…",
+  reconnecting: "Reconnecting…", paused: "Paused", error: "Station unavailable"
 };
+
+const IDLE_ICON =
+  '<div class="art idle"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" fill="none" ' +
+  'stroke="currentColor" stroke-width="1.7" stroke-linecap="round">' +
+  '<path d="M4.93 19.07a10 10 0 0 1 0-14.14"/><path d="M7.76 16.24a6 6 0 0 1 0-8.49"/>' +
+  '<path d="M16.24 7.76a6 6 0 0 1 0 8.49"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>' +
+  '<circle cx="12" cy="12" r="1.9" fill="currentColor" stroke="none"/></svg></div>';
 
 function paintHero() {
   const st = current();
@@ -457,12 +553,7 @@ function paintHero() {
   hero.dataset.status = S.status;
 
   if (!st) {
-    $("heroArt").className = "art idle";
-    $("heroArt").innerHTML =
-      '<svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true">' +
-      '<circle cx="12" cy="16" r="1.7" fill="currentColor"/>' +
-      '<path d="M8.6 9.6a5 5 0 0 0 0 6.4M15.4 9.6a5 5 0 0 1 0 6.4M5.6 6.6a9.2 9 0 0 0 0 12.4M18.4 6.6a9.2 9 0 0 1 0 12.4"' +
-      ' fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>';
+    $("heroArtWrap").innerHTML = IDLE_ICON;
     $("heroName").textContent = "Pick a station";
     $("heroMeta").textContent = allStations().length + " live stations from Tunisia";
     $("heroStatus").textContent = "Ready";
@@ -470,27 +561,26 @@ function paintHero() {
     return;
   }
 
-  const art = $("heroArt");
-  art.className = "art";
-  art.style.setProperty("--c", st.c || "#8E8B87");
-  art.textContent = initials(st.name);
-
+  $("heroArtWrap").innerHTML = avatar(st, "art");
   $("heroName").textContent = st.name;
-  const bits = [st.city, st.kbps ? st.kbps + " kbps" : null, "Live"].filter(Boolean);
+  const bits = [st.id === PREVIEW_ID ? "Preview" : st.city, st.kbps ? st.kbps + " kbps" : null, "Live"].filter(Boolean);
   $("heroMeta").textContent = bits.join(" · ");
-  $("heroStatus").textContent = STATUS_TEXT[S.status] || "Ready";
+  $("heroStatus").textContent = st.id === PREVIEW_ID && S.status === "playing"
+    ? "Preview — tap + to keep"
+    : (STATUS_TEXT[S.status] || "Ready");
   $("barName").textContent = st.name;
 }
 
 function paintList() {
   const list = $("list");
   const items = visible();
+  list.classList.toggle("playing", S.status === "playing");
 
   if (!items.length) {
-    list.innerHTML = '<p class="empty">' +
-      (S.filter === "fav"
-        ? "No favourites yet.<br>Tap the star next to a station to save it here."
-        : "Nothing here.") + "</p>";
+    let msg = "Nothing here.";
+    if (S.filter === "fav") msg = "No favourites yet.<br>Tap the star next to a station to save it here.";
+    else if (S.filter.indexOf("list:") === 0) msg = "This list is empty.<br>Open <b>+ Lists</b> to add stations to it.";
+    list.innerHTML = '<p class="empty">' + msg + "</p>";
     return;
   }
 
@@ -498,19 +588,27 @@ function paintList() {
     const on = s.id === S.stationId;
     const fav = S.favs.has(s.id);
     const sub = [s.city, s.group === "national" ? "National" : "Music & talk"].filter(Boolean).join(" · ");
-    return '<div class="st' + (on ? " on" : "") + '" data-id="' + s.id + '" role="button" tabindex="0"' +
-      ' style="--c:' + (s.c || "#8E8B87") + '" aria-label="Play ' + esc(s.name) + '">' +
-      '<span class="dot">' + initials(s.name) + "</span>" +
+    return '<div class="st' + (on ? " on" : "") + '" data-id="' + esc(s.id) + '" role="button" tabindex="0" style="--c:' + (s.c || "#8E8B87") + '" aria-label="Play ' + esc(s.name) + '">' +
+      avatar(s, "dot") +
       '<span class="txt"><span class="nm">' + esc(s.name) + '</span><span class="sub">' + esc(sub) + "</span></span>" +
       '<span class="mini" aria-hidden="true"><i></i><i></i><i></i></span>' +
-      '<button class="fav" aria-label="Favourite ' + esc(s.name) + '" aria-pressed="' + fav + '" data-fav="' + s.id + '">' +
+      '<button class="fav" aria-label="Favourite ' + esc(s.name) + '" aria-pressed="' + fav + '" data-fav="' + esc(s.id) + '">' +
         '<svg viewBox="0 0 24 24"><path d="m12 3.6 2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg>' +
       "</button></div>";
   }).join("");
 }
 
-function esc(s) {
-  return String(s).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+function paintChips() {
+  const base = [
+    { f: "all", label: "All" },
+    { f: "fav", label: "My list" },
+    { f: "music", label: "Music" },
+    { f: "national", label: "National" }
+  ].concat(S.lists.map((l) => ({ f: "list:" + l.id, label: l.name })));
+
+  $("chips").innerHTML = base.map((c) =>
+    '<button class="chip" data-filter="' + esc(c.f) + '" aria-pressed="' + (S.filter === c.f) + '">' + esc(c.label) + "</button>"
+  ).join("") + '<button class="chip add" id="chipManageLists" aria-label="Manage lists">+ Lists</button>';
 }
 
 function paintTransport() {
@@ -519,10 +617,10 @@ function paintTransport() {
   $("btnPlay").setAttribute("aria-label", playing ? "Pause" : "Play");
   const st = current();
   $("btnFav").setAttribute("aria-pressed", st ? String(S.favs.has(st.id)) : "false");
-  $("btnFav").disabled = !st;
+  $("btnFav").disabled = !st || st.id === PREVIEW_ID;
 }
 
-function paintAll() { paintHero(); paintList(); paintTransport(); }
+function paintAll() { paintHero(); paintList(); paintChips(); paintTransport(); }
 
 /* ============================================================
    Audio engine
@@ -532,8 +630,8 @@ let failCount = 0;
 let lastFailAt = 0;
 let lastTime = 0;
 let stallTicks = 0;
-let suppressPause = false;   // load() fires a bogus "pause"; ignore it
-let wantPlay = false;        // do we intend to be playing right now?
+let suppressPause = false;
+let wantPlay = false;
 
 const bust = (url) => url + (url.includes("?") ? "&" : "?") + "t=" + Date.now();
 
@@ -546,13 +644,9 @@ function setStatus(s) {
   syncMediaSession();
 }
 
-/* Loading a new src makes the element emit "pause" even though we asked for
-   the opposite. A short suppression window keeps that from clobbering the
-   "loading" / "reconnecting" states. */
 function loadSrc(url) {
   suppressPause = true;
-  audio.src = bust(url);   // assigning src already starts the load; an extra
-                           // load() would abort and restart the fetch
+  audio.src = bust(url);
   setTimeout(() => { suppressPause = false; }, 600);
 }
 
@@ -560,7 +654,7 @@ function playStation(st, autoplay = true) {
   if (!st) return;
   clearTimeout(retryTimer);
   S.stationId = st.id;
-  store.set("last", st.id);
+  if (st.id !== PREVIEW_ID) store.set("last", st.id);
   failCount = 0;
   stallTicks = 0;
   lastTime = 0;
@@ -576,17 +670,14 @@ function start() {
   const p = audio.play();
   if (p && p.catch) {
     p.catch((err) => {
-      if (!err || err.name === "AbortError") return;      // superseded by a newer load
+      if (!err || err.name === "AbortError") return;
       if (err.name === "NotAllowedError") { wantPlay = false; setStatus("paused"); return; }
       fail(err.name || "play");
     });
   }
 }
 
-function pausePlayback() {
-  wantPlay = false;
-  audio.pause();
-}
+function pausePlayback() { wantPlay = false; audio.pause(); }
 
 function reconnect() {
   const st = current();
@@ -604,7 +695,7 @@ function reconnect() {
 
 function fail(why) {
   const now = Date.now();
-  if (now - lastFailAt < 900) return;   // the same failure is often reported twice
+  if (now - lastFailAt < 900) return;
   lastFailAt = now;
   failCount += 1;
   if (failCount >= 3) { wantPlay = false; setStatus("error"); return; }
@@ -633,9 +724,6 @@ audio.addEventListener("error", () => {
   fail("media");
 });
 
-/* Liveness watchdog: a live stream must keep advancing its clock.
-   (No "timeupdate" listener here — that would keep resetting lastTime
-   and a stall would never be noticed.) */
 setInterval(() => {
   if (S.status !== "playing" && S.status !== "buffering") return;
   if (audio.paused) return;
@@ -687,7 +775,7 @@ function syncMediaSession() {
     navigator.mediaSession.metadata = new MediaMetadata({
       title: st ? st.name : "Tounsi Radio",
       artist: "Tounsi Radio",
-      album: st ? st.city + " · Live" : "Tunisian radio",
+      album: !st ? "Tunisian radio" : (st.id === PREVIEW_ID ? "Preview" : st.city + " · Live"),
       artwork: [
         { src: new URL("icon-512.png", location.href).href, sizes: "512x512", type: "image/png" },
         { src: new URL("icon-180.png", location.href).href, sizes: "180x180", type: "image/png" }
@@ -710,7 +798,12 @@ if ("mediaSession" in navigator) {
     pause: () => pausePlayback(),
     stop: () => stopAll(),
     nexttrack: () => step(1),
-    previoustrack: () => step(-1)
+    previoustrack: () => step(-1),
+    // Live radio can't be scrubbed; removing these stops iOS offering
+    // useless −10s/+10s buttons and lets it fall back to prev/next.
+    seekbackward: null,
+    seekforward: null,
+    seekto: null
   };
   for (const [k, fn] of Object.entries(handlers)) {
     try { navigator.mediaSession.setActionHandler(k, fn); } catch {}
@@ -718,7 +811,7 @@ if ("mediaSession" in navigator) {
 }
 
 /* ============================================================
-   Screen wake lock (keep the dashboard display alive)
+   Screen wake lock
    ============================================================ */
 let wakeLock = null;
 async function applyWakeLock() {
@@ -729,9 +822,7 @@ function releaseWakeLock() {
   if (wakeLock) { try { wakeLock.release(); } catch {} wakeLock = null; }
 }
 document.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "visible") {
-    if (S.status === "playing") applyWakeLock();
-  }
+  if (document.visibilityState === "visible" && S.status === "playing") applyWakeLock();
 });
 
 /* ============================================================
@@ -739,7 +830,60 @@ document.addEventListener("visibilitychange", () => {
    ============================================================ */
 function toggleFav(id) {
   if (S.favs.has(id)) S.favs.delete(id); else S.favs.add(id);
-  store.set("favs", [...S.favs]);
+  persist.favs();
+  paintAll();
+}
+
+/* ============================================================
+   Custom stations + lists
+   ============================================================ */
+function addStation(name, url) {
+  if (!/^https?:\/\//i.test(url)) return "Enter a link starting with http:// or https://";
+  if (allStations().some((s) => s.url === url)) return "That station is already in the list.";
+  const id = "custom-" + Date.now().toString(36);
+  S.custom.push({ id, name: (name || "My station").slice(0, 60), city: "Custom", group: "music", url, c: "#7C8794", kbps: 0 });
+  persist.custom();
+  paintAll();
+  return "Added.";
+}
+
+function removeStation(id) {
+  if (!String(id).startsWith("custom-")) return false;
+  S.custom = S.custom.filter((s) => s.id !== id);
+  persist.custom();
+  S.favs.delete(id);
+  persist.favs();
+  S.lists.forEach((l) => { l.items = l.items.filter((x) => x !== id); });
+  persist.lists();
+  if (S.stationId === id) stopAll();
+  paintAll();
+  return true;
+}
+
+function newListName(name) {
+  name = (name || "").trim();
+  if (!name) return "Give the list a name.";
+  if (S.lists.some((l) => l.name.toLowerCase() === name.toLowerCase())) return "You already have a list with that name.";
+  S.lists.push({ id: "l" + Date.now().toString(36), name: name.slice(0, 28), items: [] });
+  persist.lists();
+  paintAll();
+  return "Created.";
+}
+
+function deleteList(id) {
+  S.lists = S.lists.filter((l) => l.id !== id);
+  persist.lists();
+  if (S.filter === "list:" + id) { S.filter = "all"; persist.filter(); }
+  if (S.editingList === id) S.editingList = null;
+  paintAll();
+}
+
+function toggleInList(listId, stationId) {
+  const l = S.lists.find((x) => x.id === listId);
+  if (!l) return;
+  const i = l.items.indexOf(stationId);
+  if (i === -1) l.items.push(stationId); else l.items.splice(i, 1);
+  persist.lists();
   paintAll();
 }
 
@@ -748,59 +892,104 @@ function toggleFav(id) {
    ============================================================ */
 const sheet = $("sheet");
 const scrim = $("scrim");
+
 function openSheet() {
+  S.editingList = null;
   sheet.classList.add("open");
   scrim.classList.add("open");
+  showSheetView("home");
   renderCustomList();
+  renderListRows();
 }
 function closeSheet() {
   sheet.classList.remove("open");
   scrim.classList.remove("open");
+  S.editingList = null;
+}
+
+function showSheetView(view) {
+  $("sheetHome").hidden = view !== "home";
+  $("sheetLists").hidden = view !== "lists";
+  sheet.scrollTop = 0;
+}
+
+function renderListRows() {
+  const box = $("listRows");
+  if (!S.lists.length) {
+    box.innerHTML = '<p class="note">No lists yet — create one below.</p>';
+    return;
+  }
+  box.innerHTML = S.lists.map((l) =>
+    '<div class="lrow"><div style="flex:1;min-width:0">' +
+    '<div class="lname">' + esc(l.name) + '</div>' +
+    '<div class="lcount">' + l.items.length + (l.items.length === 1 ? " station" : " stations") + '</div></div>' +
+    '<button class="btn" data-edit="' + l.id + '">Edit</button>' +
+    '<button class="btn ghostbtn" data-del="' + l.id + '" aria-label="Delete list">Delete</button></div>'
+  ).join("");
+}
+
+function renderListEditor() {
+  const l = S.lists.find((x) => x.id === S.editingList);
+  if (!l) { showSheetView("home"); return; }
+  const rows = allStations().map((s) => {
+    const on = l.items.indexOf(s.id) !== -1;
+    const sub = [s.city, s.group === "national" ? "National" : "Music & talk"].filter(Boolean).join(" · ");
+    return '<div class="pick' + (on ? " on" : "") + '" data-pick="' + s.id + '" role="button" tabindex="0" style="--c:' + (s.c || "#8E8B87") + '">' +
+      avatar(s, "dot") +
+      '<span class="txt"><span class="nm">' + esc(s.name) + '</span><span class="sub">' + esc(sub) + '</span></span>' +
+      '<span class="box"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+      "</div>";
+  }).join("");
+
+  $("sheetLists").innerHTML =
+    '<div class="shead"><button class="btn ghostbtn" id="backToHome">&larr; Back</button>' +
+    '<input class="listtitle" id="editListName" value="' + esc(l.name) + '" maxlength="28" aria-label="List name">' +
+    "</div>" +
+    '<p class="note" style="margin:6px 0 12px">Tick the stations you want in this list. ' + l.items.length + ' selected.</p>' +
+    '<div class="picks">' + rows + "</div>";
+  showSheetView("lists");
 }
 
 function renderCustomList() {
   const box = $("customList");
-  if (!S.custom.length) { box.innerHTML = '<p class="note">None yet.</p>'; return; }
+  if (!S.custom.length) { box.innerHTML = '<p class="note">None yet. Stations you add appear here.</p>'; return; }
   box.innerHTML = S.custom.map((s) =>
-    '<div class="srow"><div><div class="lbl">' + esc(s.name) + '</div>' +
-    '<div class="hint" style="word-break:break-all">' + esc(s.url) + '</div></div>' +
-    '<button class="btn" data-del="' + s.id + '">Remove</button></div>'
+    '<div class="lrow"><div style="flex:1;min-width:0">' +
+    '<div class="lname">' + esc(s.name) + '</div>' +
+    '<div class="lcount" style="word-break:break-all">' + esc(s.url) + '</div></div>' +
+    '<button class="btn ghostbtn" data-remove="' + s.id + '">Remove</button></div>'
   ).join("");
 }
 
-function addStation(name, url) {
-  if (!/^https?:\/\//i.test(url)) return "Enter a link starting with http:// or https://";
-  if (allStations().some((s) => s.url === url)) return "That station is already in the list.";
-  const id = "custom-" + Date.now().toString(36);
-  const st = { id, name: (name || "My station").slice(0, 60), city: "Custom", group: "music", url, c: "#7C8794", kbps: 0 };
-  S.custom.push(st);
-  store.set("custom", S.custom);
-  paintAll();
-  renderCustomList();
-  return "Added.";
+/* ============================================================
+   Live directory (radio-browser.info)
+   ============================================================ */
+function renderDirectory() {
+  const box = $("dirList");
+  if (!S.dirResults.length) { box.innerHTML = ""; return; }
+
+  box.innerHTML = S.dirResults.map((r, i) => {
+    const have = allStations().find((s) => s.url === r.url);
+    const removable = have && String(have.id).startsWith("custom-");
+    const label = removable ? "Remove" : have ? "Added" : "Add";
+    return '<div class="st dir" data-i="' + i + '" role="button" tabindex="0" style="--c:#3F8FA3" aria-label="Preview ' + esc(r.name) + '">' +
+      avatar(r, "dot") +
+      '<span class="txt"><span class="nm">' + esc(r.name) + '</span>' +
+      '<span class="sub">' + esc(removable ? "In your list · tap to preview" : "Tap to preview") + "</span></span>" +
+      '<button class="btn small' + (removable ? " ghostbtn" : "") + '" data-act="' + i + '"' +
+      (have && !removable ? " disabled" : "") + ">" + label + "</button></div>";
+  }).join("");
 }
 
-$("btnSettings").addEventListener("click", openSheet);
-$("scrim").addEventListener("click", closeSheet);
+function previewDir(i) {
+  const r = S.dirResults[i];
+  if (!r) return;
+  S.preview = { id: PREVIEW_ID, name: r.name, city: "Preview", group: "music", url: r.url, c: "#3F8FA3", kbps: 0 };
+  playStation(S.preview);
+  renderDirectory();
+}
 
-$("swWake").addEventListener("click", (e) => {
-  S.wake = !S.wake;
-  store.set("wake", S.wake);
-  e.currentTarget.setAttribute("aria-checked", String(S.wake));
-  if (S.wake) applyWakeLock(); else releaseWakeLock();
-});
-$("swWake").setAttribute("aria-checked", String(S.wake));
-
-$("btnAddManual").addEventListener("click", () => {
-  const msg = addStation($("inName").value.trim(), $("inUrl").value.trim());
-  const el = $("addMsg");
-  el.textContent = msg;
-  el.style.display = "block";
-  if (msg === "Added.") { $("inName").value = ""; $("inUrl").value = ""; }
-});
-
-$("btnBrowse").addEventListener("click", async (e) => {
-  const btn = e.currentTarget;
+async function browseDirectory(btn) {
   const box = $("dirList");
   btn.disabled = true;
   btn.textContent = "Searching…";
@@ -810,45 +999,36 @@ $("btnBrowse").addEventListener("click", async (e) => {
     if (!r.ok) throw new Error("HTTP " + r.status);
     const data = await r.json();
     const seen = new Set(allStations().map((s) => s.url));
-    const good = data.filter((s) => {
+    // The community directory also lists hundreds of non-stop recitation
+    // feeds and a few dead hosts; those aren't radio stations, so skip them.
+    const NOISE_HOST = /qurango|al7eah|shoutca\.st|radiojar|zeno\.fm/i;
+    const NOISE_NAME = /قرآن|القرآن|تراتيل|أذكار|أذان|السيرة|الصحابة|رمضان|فتاوى|ميراث|قراءات|الشيخ|عاشوراء|شوال|السكينة|الأنبياء|quran|coran|sodais|sudaes|bukhatir|abbad/i;
+    S.dirResults = data.filter((s) => {
       const u = s.url_resolved || s.url || "";
       const codec = String(s.codec || "").toUpperCase();
-      return u.startsWith("https://") && !s.hls && (codec === "MP3" || codec.startsWith("AAC")) && !seen.has(u);
-    }).slice(0, 25);
-
-    if (!good.length) { box.innerHTML = '<p class="note">No new stations found right now.</p>'; return; }
-    box.innerHTML = good.map((s) =>
-      '<button class="st" data-addurl="' + esc(s.url_resolved) + '" data-addname="' + esc(s.name) + '" style="--c:#3F8FA3">' +
-      '<span class="dot">' + initials(s.name) + "</span>" +
-      '<span class="txt"><span class="nm">' + esc(s.name) + "</span>" +
-      '<span class="sub">' + esc(s.country || "Tunisia") + " · tap to add</span></span>" +
-      '<span class="fav" style="color:#7C8794"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button>'
-    ).join("");
+      const name = s.name || "";
+      if (!u.startsWith("https://") || s.hls) return false;
+      if (!(codec === "MP3" || codec.startsWith("AAC"))) return false;
+      return !NOISE_HOST.test(u) && !NOISE_NAME.test(name);
+    }).map((s) => ({
+      id: "dir-" + s.stationuuid, name: s.name, url: s.url_resolved || s.url,
+      c: "#3F8FA3", sub: s.country || "Tunisia"
+    })).filter((r2) => {
+      if (seen.has(r2.url)) return false;
+      seen.add(r2.url);
+      return true;
+    }).slice(0, 30);
+    renderDirectory();
+    if (!S.dirResults.length) box.innerHTML = '<p class="note">No new stations found right now.</p>';
+    // bring the results into view: the sheet is long
+    try { sheet.scrollTo({ top: box.offsetTop - 70, behavior: "smooth" }); } catch { sheet.scrollTop = box.offsetTop - 70; }
   } catch (err) {
-    box.innerHTML = '<p class="note">Directory unreachable right now. You can still add a station by link above.</p>';
+    box.innerHTML = '<p class="note">Directory unreachable right now. You can still add a station by link.</p>';
   } finally {
     btn.disabled = false;
     btn.textContent = "Browse directory";
   }
-});
-
-$("dirList").addEventListener("click", (e) => {
-  const b = e.target.closest("[data-addurl]");
-  if (!b) return;
-  addStation(b.dataset.addname, b.dataset.addurl);
-  b.remove();
-});
-
-$("customList").addEventListener("click", (e) => {
-  const b = e.target.closest("[data-del]");
-  if (!b) return;
-  const id = b.dataset.del;
-  S.custom = S.custom.filter((s) => s.id !== id);
-  store.set("custom", S.custom);
-  if (S.stationId === id) stopAll();
-  paintAll();
-  renderCustomList();
-});
+}
 
 /* ============================================================
    Wiring
@@ -857,7 +1037,10 @@ $("btnPlay").addEventListener("click", togglePlay);
 $("btnNext").addEventListener("click", () => step(1));
 $("btnPrev").addEventListener("click", () => step(-1));
 $("btnStop").addEventListener("click", stopAll);
-$("btnFav").addEventListener("click", () => { if (S.stationId) toggleFav(S.stationId); });
+$("btnFav").addEventListener("click", () => {
+  const st = current();
+  if (st && st.id !== PREVIEW_ID) toggleFav(st.id);
+});
 
 $("list").addEventListener("click", (e) => {
   const fav = e.target.closest("[data-fav]");
@@ -866,22 +1049,119 @@ $("list").addEventListener("click", (e) => {
   if (!card) return;
   const st = byId(card.dataset.id);
   if (!st) return;
-  if (st.id === S.stationId && !audio.paused) { audio.pause(); return; }
+  if (st.id === S.stationId && !audio.paused) { pausePlayback(); return; }
   playStation(st);
 });
 
 $("list").addEventListener("keydown", (e) => {
   if (e.key !== "Enter" && e.key !== " ") return;
   const fav = e.target.closest("[data-fav]");
-  if (fav) { e.preventDefault(); toggleFav(fav.dataset.fav); }
+  if (fav) { e.preventDefault(); toggleFav(fav.dataset.fav); return; }
+  const card = e.target.closest("[data-id]");
+  if (card) { e.preventDefault(); const st = byId(card.dataset.id); if (st) playStation(st); }
 });
 
-document.querySelectorAll(".chip").forEach((chip) => {
-  chip.addEventListener("click", () => {
-    S.filter = chip.dataset.filter;
-    document.querySelectorAll(".chip").forEach((c) => c.setAttribute("aria-pressed", String(c === chip)));
-    paintList();
-  });
+$("chips").addEventListener("click", (e) => {
+  if (e.target.closest("#chipManageLists")) { openSheet(); return; }
+  const chip = e.target.closest(".chip[data-filter]");
+  if (!chip) return;
+  S.filter = chip.dataset.filter;
+  persist.filter();
+  paintChips();
+  paintList();
+});
+
+$("btnSettings").addEventListener("click", openSheet);
+$("scrim").addEventListener("click", closeSheet);
+$("btnCloseSheet").addEventListener("click", closeSheet);
+$("grabClose").addEventListener("click", closeSheet);
+
+$("swWake").addEventListener("click", (e) => {
+  S.wake = !S.wake;
+  store.set("wake", S.wake);
+  e.currentTarget.setAttribute("aria-checked", String(S.wake));
+  if (S.wake) applyWakeLock(); else releaseWakeLock();
+});
+$("swWake").setAttribute("aria-checked", String(S.wake));
+
+$("btnNewList").addEventListener("click", () => {
+  const msg = newListName($("inListName").value);
+  const el = $("listMsg");
+  if (msg === "Created.") {
+    $("inListName").value = "";
+    el.style.display = "none";
+    renderListRows();
+  } else {
+    el.textContent = msg;
+    el.style.display = "block";
+  }
+});
+
+$("listRows").addEventListener("click", (e) => {
+  const ed = e.target.closest("[data-edit]");
+  if (ed) { S.editingList = ed.dataset.edit; renderListEditor(); return; }
+  const del = e.target.closest("[data-del]");
+  if (del) { deleteList(del.dataset.del); renderListRows(); }
+});
+
+$("sheetLists").addEventListener("keydown", (e) => {
+  if (e.key !== "Enter" && e.key !== " ") return;
+  const pick = e.target.closest("[data-pick]");
+  if (pick && S.editingList) { e.preventDefault(); toggleInList(S.editingList, pick.dataset.pick); renderListEditor(); }
+});
+
+$("sheetLists").addEventListener("change", (e) => {
+  if (e.target.id !== "editListName" || !S.editingList) return;
+  const l = S.lists.find((x) => x.id === S.editingList);
+  if (!l) return;
+  const v = e.target.value.trim().slice(0, 28);
+  if (!v) { e.target.value = l.name; return; }
+  l.name = v;
+  persist.lists();
+  paintChips();
+  renderListRows();
+});
+
+$("sheetLists").addEventListener("click", (e) => {
+  if (e.target.closest("#backToHome")) { S.editingList = null; showSheetView("home"); renderListRows(); renderCustomList(); return; }
+  const pick = e.target.closest("[data-pick]");
+  if (pick && S.editingList) { toggleInList(S.editingList, pick.dataset.pick); renderListEditor(); }
+});
+
+$("btnAddManual").addEventListener("click", () => {
+  const msg = addStation($("inName").value.trim(), $("inUrl").value.trim());
+  const el = $("addMsg");
+  el.textContent = msg;
+  el.style.display = "block";
+  if (msg === "Added.") { $("inName").value = ""; $("inUrl").value = ""; renderCustomList(); }
+});
+
+$("btnBrowse").addEventListener("click", (e) => browseDirectory(e.currentTarget));
+
+$("dirList").addEventListener("click", (e) => {
+  const act = e.target.closest("[data-act]");
+  if (act) {
+    e.stopPropagation();
+    const i = Number(act.dataset.act);
+    const r = S.dirResults[i];
+    if (!r) return;
+    const have = allStations().find((s) => s.url === r.url);
+    if (have && String(have.id).startsWith("custom-")) removeStation(have.id);
+    else if (!have) addStation(r.name, r.url);
+    renderDirectory();
+    renderCustomList();
+    return;
+  }
+  const row = e.target.closest(".dir[data-i]");
+  if (row) previewDir(Number(row.dataset.i));
+});
+
+$("customList").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-remove]");
+  if (!b) return;
+  removeStation(b.dataset.remove);
+  renderCustomList();
+  renderDirectory();
 });
 
 document.addEventListener("keydown", (e) => {
@@ -906,6 +1186,9 @@ $("hintClose").addEventListener("click", () => {
     window.matchMedia("(display-mode: standalone)").matches;
   if (isIOS && !standalone && !store.get("hintSeen", false)) $("hint").classList.add("show");
 
+  // a filter pointing at a deleted/unknown list falls back to All
+  if (S.filter.indexOf("list:") === 0 && !S.lists.some((l) => "list:" + l.id === S.filter)) S.filter = "all";
+
   paintAll();
 
   const secure = location.protocol === "https:" || location.hostname === "localhost" || location.hostname === "127.0.0.1";
@@ -915,6 +1198,7 @@ $("hintClose").addEventListener("click", () => {
     });
   }
 })();
+
 </script>
 </body>
 </html>

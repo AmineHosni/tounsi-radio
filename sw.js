@@ -2,7 +2,7 @@
    Caches the app shell so it opens instantly (even on a weak signal),
    and never touches the audio streams themselves. */
 
-const VERSION = "1.0.0";
+const VERSION = "1.1.0";
 const CACHE = "tounsi-radio-" + VERSION;
 
 const SHELL = [
@@ -11,6 +11,12 @@ const SHELL = [
   "./manifest.json",
   "./icon-180.png",
   "./icon-192.png",
+  "./logos/mosaique.png",
+  "./logos/jawhara.png",
+  "./logos/diwan.png",
+  "./logos/express.png",
+  "./logos/knooz.png",
+  "./logos/misk.png",
   "./icon-512.png",
   "./icon-maskable-512.png",
   "./favicon-32.png"
