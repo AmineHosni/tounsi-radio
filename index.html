@@ -1,0 +1,920 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>Tounsi Radio — Tunisian radio, live</title>
+<meta name="description" content="Live Tunisian radio for the road.">
+<meta name="theme-color" content="#0A0A0C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Tounsi Radio">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="favicon-32.png">
+<style>
+  :root{
+    --bg:#08080A; --bg2:#101014; --card:#15151A; --card2:#1B1B21;
+    --line:#26262E; --tx:#F7F5F2; --mut:#95918C; --dim:#837E78;
+    --red:#E70013; --red2:#FF5A3C; --gold:#E8B760;
+    --bar-h:122px;
+    --safe-b:env(safe-area-inset-bottom, 0px);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--tx);
+    font:16px/1.35 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;
+    overscroll-behavior:none; -webkit-font-smoothing:antialiased;
+    padding-bottom:calc(var(--bar-h) + var(--safe-b) + 8px);
+  }
+  button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;touch-action:manipulation}
+  h1,h2,h3,p{margin:0}
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky; top:0; z-index:30;
+    display:flex; align-items:center; gap:10px;
+    padding:calc(env(safe-area-inset-top,0px) + 10px) 18px 10px;
+    background:linear-gradient(180deg,rgba(8,8,10,.96),rgba(8,8,10,.82) 70%,rgba(8,8,10,0));
+    backdrop-filter:saturate(140%) blur(12px); -webkit-backdrop-filter:saturate(140%) blur(12px);
+  }
+  .brand{display:flex;align-items:center;gap:9px;font-size:16px;font-weight:680;letter-spacing:-.2px}
+  .brand svg{width:22px;height:22px;display:block}
+  .brand b{color:var(--tx)}
+  .brand span{color:var(--mut);font-weight:560}
+  header .spacer{flex:1}
+  .icon-btn{
+    width:42px;height:42px;border-radius:14px;display:grid;place-items:center;
+    background:var(--card);border:1px solid var(--line);color:var(--mut);
+  }
+  .icon-btn:active{background:var(--card2)}
+  .icon-btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+  /* ---------- hero ---------- */
+  .hero{padding:6px 18px 14px;position:relative}
+  .hero .row{display:flex;align-items:center;gap:14px}
+  .art{
+    width:76px;height:76px;flex:0 0 76px;border-radius:22px;display:grid;place-items:center;
+    background:linear-gradient(150deg,color-mix(in srgb,var(--c) 26%,#15151a),color-mix(in srgb,var(--c) 9%,#101014));
+    border:1px solid color-mix(in srgb,var(--c) 38%,#26262e);
+    color:var(--c); font-weight:760; font-size:25px; letter-spacing:-.5px;
+    box-shadow:0 10px 30px -14px color-mix(in srgb,var(--c) 70%,transparent);
+    transition:box-shadow .4s ease;
+  }
+  .art.idle{--c:#4A4A55;color:#8B8794;background:linear-gradient(150deg,#191920,#101014);border-color:#26262E;box-shadow:none}
+  .hero h1{font-size:25px;line-height:1.15;letter-spacing:-.6px;font-weight:730;margin-bottom:5px;
+           overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .eyebrow{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:640;letter-spacing:.10em;
+           text-transform:uppercase;color:var(--mut);margin-bottom:4px}
+  .livedot{width:7px;height:7px;border-radius:50%;background:var(--dim);flex:0 0 7px}
+  .hero[data-status="playing"] .livedot{background:var(--red);box-shadow:0 0 0 0 rgba(231,0,19,.6);animation:pulse 2.2s infinite}
+  .hero[data-status="playing"] .eyebrow{color:#F3B9BE}
+  .hero[data-status="loading"] .livedot,
+  .hero[data-status="buffering"] .livedot,
+  .hero[data-status="reconnecting"] .livedot{background:var(--gold);animation:pulse 1.1s infinite}
+  .hero[data-status="error"] .livedot{background:var(--red2)}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(231,0,19,.55)}70%{box-shadow:0 0 0 9px rgba(231,0,19,0)}100%{box-shadow:0 0 0 0 rgba(231,0,19,0)}}
+  .meta{font-size:13.5px;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .meter{display:flex;flex:0 0 auto;align-items:flex-end;gap:2.5px;height:15px;margin-left:auto;padding-left:10px;opacity:0;transition:opacity .3s}
+  .hero[data-status="playing"] .meter{opacity:1}
+  .meter i{display:block;width:3px;border-radius:2px;background:var(--red2);height:30%;animation:eq .9s ease-in-out infinite}
+  .meter i:nth-child(2){animation-delay:-.55s;height:70%}
+  .meter i:nth-child(3){animation-delay:-.25s;height:45%}
+  .meter i:nth-child(4){animation-delay:-.75s;height:90%}
+  @keyframes eq{0%,100%{transform:scaleY(.45)}50%{transform:scaleY(1)}}
+  @media (prefers-reduced-motion:reduce){
+    .meter i,.hero .livedot{animation:none!important}
+  }
+
+  /* ---------- chips ---------- */
+  .chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px 18px 12px;
+         position:sticky;top:calc(env(safe-area-inset-top,0px) + 62px);z-index:20;
+         background:linear-gradient(180deg,var(--bg) 55%,rgba(8,8,10,0))}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{flex:0 0 auto;padding:9px 16px;border-radius:999px;font-size:13px;font-weight:620;
+        background:var(--card);border:1px solid var(--line);color:var(--mut);white-space:nowrap}
+  .chip[aria-pressed="true"]{background:var(--tx);border-color:var(--tx);color:#0A0A0C}
+
+  /* ---------- list ---------- */
+  main{padding:0 12px 8px;display:grid;gap:7px}
+  .st{
+    display:flex;align-items:center;gap:13px;width:100%;text-align:left;cursor:pointer;
+    -webkit-user-select:none;user-select:none;
+    padding:10px 10px 10px 11px;border-radius:19px;background:var(--card);
+    border:1px solid transparent;transition:background .18s,border-color .18s,transform .1s;
+  }
+  .st:active{transform:scale(.988);background:var(--card2)}
+  .st .dot{
+    width:44px;height:44px;flex:0 0 44px;border-radius:14px;display:grid;place-items:center;
+    font-size:14px;font-weight:740;letter-spacing:-.3px;
+    background:color-mix(in srgb,var(--c) 16%,#15151a);color:var(--c);
+    border:1px solid color-mix(in srgb,var(--c) 26%,#26262e);
+  }
+  .st .txt{min-width:0;flex:1}
+  .st .nm{display:block;font-size:16.5px;font-weight:640;letter-spacing:-.2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .st .sub{display:block;font-size:12.5px;color:var(--dim);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .st.on{background:var(--card2);border-color:color-mix(in srgb,var(--c) 34%,#26262e)}
+  .st.on .nm{color:#fff}
+  .st.on .dot{box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 16%,transparent)}
+  .st .mini{display:flex;align-items:flex-end;gap:2px;height:13px;flex:0 0 auto;opacity:0;margin-right:2px}
+  main.playing .st.on .mini{opacity:1}
+  .st .mini i{width:2.5px;background:var(--c);border-radius:2px;height:40%;animation:eq .85s ease-in-out infinite}
+  .st .mini i:nth-child(2){animation-delay:-.5s;height:85%}
+  .st .mini i:nth-child(3){animation-delay:-.2s;height:60%}
+  .st .fav{
+    width:40px;height:40px;flex:0 0 40px;border-radius:12px;display:grid;place-items:center;color:#4B4B55;
+  }
+  .st .fav svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linejoin:round}
+  .st .fav[aria-pressed="true"]{color:var(--gold)}
+  .st .fav[aria-pressed="true"] svg{fill:var(--gold);stroke:var(--gold)}
+  .empty{text-align:center;color:var(--dim);font-size:14px;padding:34px 20px;line-height:1.5}
+
+  /* ---------- transport bar ---------- */
+  .bar{
+    position:fixed;left:0;right:0;bottom:0;z-index:40;
+    padding:8px 16px calc(8px + var(--safe-b));
+    background:linear-gradient(180deg,rgba(8,8,10,.55),rgba(8,8,10,.97) 45%);
+    backdrop-filter:saturate(140%) blur(16px);-webkit-backdrop-filter:saturate(140%) blur(16px);
+    border-top:1px solid rgba(255,255,255,.06);
+  }
+  .bar .in{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:560px;margin:0 auto}
+  .ctl{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;
+       background:var(--card);border:1px solid var(--line);color:var(--tx)}
+  .ctl:active{background:var(--card2)}
+  .ctl:disabled{opacity:.32}
+  .ctl svg{width:26px;height:26px;fill:currentColor}
+  .ctl.ghost{background:transparent;border-color:transparent;color:var(--mut);width:52px;height:52px}
+  .ctl.ghost svg{fill:none;stroke:currentColor;stroke-width:1.6;stroke-linejoin:round;width:23px;height:23px}
+  .ctl.ghost[aria-pressed="true"]{color:var(--gold)}
+  .ctl.ghost[aria-pressed="true"] svg{fill:var(--gold);stroke:var(--gold)}
+  .play{
+    width:80px;height:80px;border-radius:50%;display:grid;place-items:center;color:#fff;
+    background:radial-gradient(120% 120% at 30% 20%,#FF3B2F,#E70013 55%,#B4000F);
+    box-shadow:0 14px 34px -12px rgba(231,0,19,.75),inset 0 1px 0 rgba(255,255,255,.28);
+    transition:transform .12s ease;
+  }
+  .play:active{transform:scale(.955)}
+  .play svg{width:32px;height:32px;fill:#fff}
+  .play .i-pause{display:none}
+  .play.on .i-play{display:none}
+  .play.on .i-pause{display:block}
+  .bar .st-name{font-size:11.5px;font-weight:640;letter-spacing:.08em;text-transform:uppercase;
+                color:var(--dim);text-align:center;margin:0 auto 6px;max-width:300px;
+                overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  /* ---------- sheet ---------- */
+  .scrim{position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:50;opacity:0;pointer-events:none;transition:opacity .25s}
+  .scrim.open{opacity:1;pointer-events:auto}
+  .sheet{
+    position:fixed;left:0;right:0;bottom:0;z-index:60;max-height:88vh;overflow:auto;
+    background:#0D0D11;border-radius:26px 26px 0 0;border-top:1px solid #2A2A33;
+    padding:8px 20px calc(26px + var(--safe-b));
+    transform:translateY(101%);transition:transform .32s cubic-bezier(.32,.72,0,1);
+    -webkit-overflow-scrolling:touch;
+  }
+  .sheet.open{transform:translateY(0)}
+  .grab{width:38px;height:4px;border-radius:99px;background:#33333D;margin:8px auto 16px}
+  .sheet h2{font-size:13px;letter-spacing:.11em;text-transform:uppercase;color:var(--mut);margin:22px 0 10px;font-weight:680}
+  .sheet h2:first-of-type{margin-top:6px}
+  .srow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #1C1C23}
+  .srow .lbl{font-size:15px;font-weight:560}
+  .srow .hint{font-size:12.5px;color:var(--dim);margin-top:2px;line-height:1.4}
+  .switch{width:50px;height:30px;border-radius:99px;background:#2A2A33;position:relative;transition:background .2s;flex:0 0 auto}
+  .switch::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .22s}
+  .switch[aria-checked="true"]{background:var(--red)}
+  .switch[aria-checked="true"]::after{transform:translateX(20px)}
+  .field{display:flex;gap:8px;margin:8px 0}
+  .field input{
+    flex:1;min-width:0;background:#15151A;border:1px solid #26262E;border-radius:13px;
+    color:var(--tx);padding:13px 14px;font-size:15px;
+  }
+  .field input::placeholder{color:#5C5C68}
+  .field input:focus{outline:none;border-color:#3C3C48}
+  .btn{
+    padding:13px 17px;border-radius:13px;background:#22222A;border:1px solid #2E2E38;
+    font-size:15px;font-weight:620;white-space:nowrap
+  }
+  .btn:active{background:#2B2B35}
+  .btn.red{background:var(--red);border-color:var(--red);color:#fff}
+  .btn.wide{width:100%;text-align:center;margin-top:4px}
+  .btn[disabled]{opacity:.5}
+  .dirlist{display:grid;gap:6px;margin-top:10px}
+  .dirlist .st{padding:8px 8px 8px 10px;border-radius:15px}
+  .dirlist .st .dot{width:38px;height:38px;flex:0 0 38px;font-size:12.5px}
+  .dirlist .st .nm{font-size:15px}
+  .note{font-size:12.5px;color:var(--dim);line-height:1.55;margin-top:8px}
+  .note a{color:#C9C5C0}
+  .about{font-size:12.5px;color:#6E6A66;line-height:1.6;margin-top:18px}
+  .about strong{color:#9A968F;font-weight:600}
+
+  /* ---------- install hint ---------- */
+  .hint{
+    display:none;align-items:flex-start;gap:10px;margin:0 12px 10px;padding:12px 13px;
+    background:linear-gradient(150deg,rgba(231,0,19,.13),rgba(231,0,19,.04));
+    border:1px solid rgba(231,0,19,.28);border-radius:16px;font-size:12.5px;line-height:1.45;color:#E9C9CB;
+  }
+  .hint.show{display:flex}
+  .hint b{color:#fff;font-weight:650}
+  .hint button{margin-left:auto;color:#B9999B;font-size:18px;line-height:1;padding:0 2px;flex:0 0 auto}
+
+  /* ---------- landscape ---------- */
+  /* Landscape = phone in a car mount. Everything shrinks so the station
+     list stays visible; only the transport bar keeps its generous size. */
+  @media (orientation:landscape) and (max-height:600px){
+    :root{--bar-h:80px}
+    header{padding-top:8px;padding-bottom:6px}
+    .brand{font-size:14px}
+    .brand svg{width:19px;height:19px}
+    .icon-btn{width:36px;height:36px;border-radius:11px}
+    .icon-btn svg{width:17px;height:17px}
+    .hero{padding:0 16px 8px}
+    .hero .row{gap:11px}
+    .art{width:48px;height:48px;flex-basis:48px;border-radius:14px;font-size:17px}
+    .hero h1{font-size:19.5px;margin-bottom:1px}
+    .eyebrow{font-size:10.5px;letter-spacing:.09em;margin-bottom:2px}
+    .meta{display:none}
+    .chips{position:static;top:auto;background:none;padding:0 16px 9px}
+    .chip{padding:7px 13px;font-size:12px}
+    main{grid-template-columns:1fr 1fr;gap:6px;padding:0 12px 6px}
+    .st{padding:7px 8px;border-radius:15px;gap:10px}
+    .st .dot{width:36px;height:36px;flex:0 0 36px;border-radius:11px;font-size:12px}
+    .st .nm{font-size:14.5px}
+    .st .sub{font-size:11px;margin-top:1px}
+    .st .fav{width:34px;height:34px;flex:0 0 34px}
+    .st .fav svg{width:17px;height:17px}
+    .bar{padding:6px 14px calc(6px + var(--safe-b))}
+    .bar .st-name{display:none}
+    .play{width:60px;height:60px}
+    .play svg{width:25px;height:25px}
+    .ctl{width:46px;height:46px}
+    .ctl svg{width:21px;height:21px}
+    .ctl.ghost{width:44px;height:44px}
+  }
+  @media (orientation:landscape) and (max-height:600px){
+    .hint{display:none!important}
+  }
+  @media (min-width:700px){
+    main{grid-template-columns:1fr 1fr}
+    .hero,.chips{max-width:900px;margin-left:auto;margin-right:auto;width:100%}
+    main{max-width:900px;margin:0 auto;width:100%}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.2 10.7a4.2 4.2 0 1 1 0-1.4l-2.1.7a2.1 2.1 0 1 0 0 0Z" fill="#E70013"/>
+    </svg>
+    <b>Tounsi</b><span>Radio</span>
+  </div>
+  <div class="spacer"></div>
+  <button class="icon-btn" id="btnSettings" aria-label="Settings">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2V21a2 2 0 1 1-4 0v-.1A1.7 1.7 0 0 0 7 19.4a1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9H1a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 2.6 7a1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H7a1.7 1.7 0 0 0 1-1.5V1a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V7a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>
+  </button>
+</header>
+
+<section class="hero" id="hero" data-status="idle">
+  <div class="row">
+    <div class="art idle" id="heroArt">—</div>
+    <div style="min-width:0;flex:1">
+      <div class="eyebrow"><span class="livedot"></span><span id="heroStatus">Ready</span></div>
+      <h1 id="heroName">Pick a station</h1>
+      <div class="meta" id="heroMeta">22 live stations from Tunisia</div>
+    </div>
+    <div class="meter" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  </div>
+</section>
+
+<div class="chips" role="tablist" aria-label="Filter stations">
+  <button class="chip" data-filter="all" aria-pressed="true">All</button>
+  <button class="chip" data-filter="fav" aria-pressed="false">My list</button>
+  <button class="chip" data-filter="music" aria-pressed="false">Music</button>
+  <button class="chip" data-filter="national" aria-pressed="false">National</button>
+</div>
+
+<div class="hint" id="hint">
+  <div>
+    <b>Put it on your Home Screen.</b> Tap <b>Share</b>, then <b>Add to Home Screen</b>. It then opens
+    full-screen like an app and keeps playing with the screen locked.
+  </div>
+  <button id="hintClose" aria-label="Dismiss">&times;</button>
+</div>
+
+<main id="list"></main>
+
+<div class="bar">
+  <div class="st-name" id="barName">Not playing</div>
+  <div class="in">
+    <button class="ctl ghost" id="btnFav" aria-label="Favourite" aria-pressed="false">
+      <svg viewBox="0 0 24 24"><path d="m12 3.6 2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg>
+    </button>
+    <button class="ctl" id="btnPrev" aria-label="Previous station">
+      <svg viewBox="0 0 24 24"><path d="M6 5h2.2v14H6zm12.6.6v12.8c0 .5-.5.8-.9.5l-8.3-6.4a.6.6 0 0 1 0-1L17.7 5c.4-.3.9 0 .9.6Z"/></svg>
+    </button>
+    <button class="play" id="btnPlay" aria-label="Play">
+      <svg class="i-play" viewBox="0 0 24 24"><path d="M8 4.7c0-.8.9-1.3 1.6-.9l9.1 6.4c.6.4.6 1.3 0 1.7l-9.1 6.4c-.7.4-1.6-.1-1.6-.9z"/></svg>
+      <svg class="i-pause" viewBox="0 0 24 24"><rect x="6.5" y="4.5" width="4" height="15" rx="1.4"/><rect x="13.5" y="4.5" width="4" height="15" rx="1.4"/></svg>
+    </button>
+    <button class="ctl" id="btnNext" aria-label="Next station">
+      <svg viewBox="0 0 24 24"><path d="M15.8 5H18v14h-2.2zM5.4 5.6v12.8c0 .5.5.8.9.5l8.3-6.4a.6.6 0 0 0 0-1L6.3 5c-.4-.3-.9 0-.9.6Z"/></svg>
+    </button>
+    <button class="ctl ghost" id="btnStop" aria-label="Stop">
+      <svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2.2"/></svg>
+    </button>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet" role="dialog" aria-label="Settings">
+  <div class="grab"></div>
+
+  <h2>While driving</h2>
+  <div class="srow">
+    <div>
+      <div class="lbl">Keep screen on</div>
+      <div class="hint">Stops the phone locking while the app is open. Uses more battery.</div>
+    </div>
+    <button class="switch" id="swWake" role="switch" aria-checked="false" aria-label="Keep screen on"></button>
+  </div>
+
+  <h2>Add a station</h2>
+  <div class="field">
+    <input id="inName" placeholder="Name" autocomplete="off" autocapitalize="words">
+    <input id="inUrl" placeholder="https://…/stream.mp3" autocomplete="off" autocapitalize="off" spellcheck="false">
+  </div>
+  <button class="btn wide" id="btnAddManual">Add station</button>
+  <p class="note" id="addMsg" style="display:none"></p>
+
+  <h2>Find more Tunisian stations</h2>
+  <p class="note">Searches the community radio directory (radio-browser.info) for Tunisian streams that will play on iPhone.</p>
+  <button class="btn wide" id="btnBrowse">Browse directory</button>
+  <div class="dirlist" id="dirList"></div>
+
+  <h2>My added stations</h2>
+  <div id="customList"><p class="note">None yet.</p></div>
+
+  <p class="about">
+    <strong>Tounsi Radio</strong> — a personal radio for the road. Streams are live broadcasts hosted by
+    the stations themselves; this app only tunes into them. Built as an offline-capable web app.
+  </p>
+</div>
+
+<audio id="audio" playsinline preload="none" x-webkit-airplay="allow"></audio>
+
+<script>
+"use strict";
+
+/* ============================================================
+   Station list — every URL below was verified live (HTTPS, MP3).
+   ============================================================ */
+const STATIONS = [
+  { id:"mosaique",       name:"Mosaïque FM",        city:"Tunis",    group:"music",    url:"https://radio.mosaiquefm.net/mosalive",                       c:"#E70013", kbps:112 },
+  { id:"jawhara",        name:"Jawhara FM",         city:"Sousse",   group:"music",    url:"https://streaming2.toutech.net/jawharafm",                    c:"#D95B2B", kbps:128 },
+  { id:"nationale",      name:"Radio Nationale",    city:"Tunis",    group:"national", url:"https://radio.radiotunisienne.tn/nationale",                  c:"#C8963E", kbps:128 },
+  { id:"rtci",           name:"RTCI",               city:"Tunis",    group:"national", url:"https://radio.radiotunisienne.tn/rtci",                       c:"#2C7DA0", kbps:128 },
+  { id:"diwan",          name:"Diwan FM",           city:"Sfax",     group:"music",    url:"https://streaming.diwanfm.net/stream",                        c:"#8A9A5B", kbps:128 },
+  { id:"express",        name:"Express FM",         city:"Tunis",    group:"music",    url:"https://expressfm.ice.infomaniak.ch/expressfm-64.mp3",        c:"#4C5FD5", kbps:64  },
+  { id:"knooz",          name:"KnOOz FM",           city:"Tunis",    group:"music",    url:"https://streaming.knoozfm.net/knoozfm",                       c:"#8E4A8B", kbps:128 },
+  { id:"mosaique-tarab", name:"Mosaïque Tarab",     city:"Tunis",    group:"music",    url:"https://radio.mosaiquefm.net/mosatarab",                      c:"#B5573C", kbps:128 },
+  { id:"mosaique-gold",  name:"Mosaïque Gold",      city:"Tunis",    group:"music",    url:"https://radio.mosaiquefm.net/mosagold",                       c:"#A8813F", kbps:128 },
+  { id:"mosaique-tounsi",name:"Mosaïque Tounsi",    city:"Tunis",    group:"music",    url:"https://radio.mosaiquefm.net/mosatounsi",                     c:"#C2446A", kbps:128 },
+  { id:"mosaique-dj",    name:"Mosaïque DJ",        city:"Tunis",    group:"music",    url:"https://radio.mosaiquefm.net/mosadj",                         c:"#7A5CC4", kbps:128 },
+  { id:"jeunes",         name:"Radio Jeunes",       city:"Tunis",    group:"national", url:"https://radio.radiotunisienne.tn/jeunes",                     c:"#3C8F6E", kbps:128 },
+  { id:"culturelle",     name:"Radio Culturelle",   city:"Tunis",    group:"national", url:"https://radio.radiotunisienne.tn/culturelle",                 c:"#9C6B3E", kbps:128 },
+  { id:"zitouna",        name:"Radio Zitouna",      city:"Tunis",    group:"national", url:"https://radio.radiotunisienne.tn/radiozaitouna",              c:"#2F7A54", kbps:192 },
+  { id:"sfax",           name:"Radio Sfax",         city:"Sfax",     group:"national", url:"https://radio.radiotunisienne.tn/sfax",                       c:"#A9563F", kbps:128 },
+  { id:"monastir",       name:"Radio Monastir",     city:"Monastir", group:"national", url:"https://radio.radiotunisienne.tn/monastir",                   c:"#35708C", kbps:128 },
+  { id:"gafsa",          name:"Radio Gafsa",        city:"Gafsa",    group:"national", url:"https://radio.radiotunisienne.tn/gafsa",                      c:"#B0862F", kbps:128 },
+  { id:"kef",            name:"Radio Le Kef",       city:"Le Kef",   group:"national", url:"https://radio.radiotunisienne.tn/kef",                        c:"#5F7A3C", kbps:128 },
+  { id:"tataouine",      name:"Radio Tataouine",    city:"Tataouine",group:"national", url:"https://radio.radiotunisienne.tn/tataouine",                  c:"#8C5A6E", kbps:64  },
+  { id:"sabra",          name:"Sabra FM",           city:"Sfax",     group:"music",    url:"https://manager5.streamradio.fr:1905/stream",                 c:"#C77F2E", kbps:192 },
+  { id:"misk",           name:"Misk FM",            city:"Tunis",    group:"music",    url:"https://live.misk.art/stream",                                c:"#3F8FA3", kbps:192 },
+  { id:"alhayet",        name:"Al Hayet FM",        city:"Tunis",    group:"music",    url:"https://manager8.streamradio.fr:2885/stream",                 c:"#A05A8E", kbps:192 },
+];
+
+const SEED_FAVS = ["mosaique", "jawhara", "nationale", "rtci"];
+
+/* ============================================================
+   Small helpers
+   ============================================================ */
+const $ = (id) => document.getElementById(id);
+const audio = $("audio");
+
+const store = {
+  get(k, d) { try { const v = localStorage.getItem("tr." + k); return v === null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem("tr." + k, JSON.stringify(v)); } catch {} }
+};
+
+const initials = (name) => {
+  const w = name.replace(/[^\p{L}\p{N} ]/gu, " ").split(/\s+/).filter(Boolean);
+  if (!w.length) return "?";
+  if (w.length === 1) return w[0].slice(0, 2).toUpperCase();
+  return (w[0][0] + w[1][0]).toUpperCase();
+};
+
+const S = {
+  stationId: store.get("last", null),
+  filter: "all",
+  favs: new Set(store.get("favs", SEED_FAVS)),
+  custom: store.get("custom", []),
+  wake: store.get("wake", false),
+  status: "idle",
+};
+if (S.custom.some((s) => !s || !s.url)) S.custom = [];
+
+const allStations = () => STATIONS.concat(S.custom);
+const byId = (id) => allStations().find((s) => s.id === id) || null;
+const current = () => byId(S.stationId);
+const visible = () => {
+  const all = allStations();
+  if (S.filter === "fav") return all.filter((s) => S.favs.has(s.id));
+  if (S.filter === "music" || S.filter === "national") return all.filter((s) => s.group === S.filter);
+  return all;
+};
+
+/* ============================================================
+   Rendering
+   ============================================================ */
+const STATUS_TEXT = {
+  idle: "Ready",
+  loading: "Connecting…",
+  playing: "Live now",
+  buffering: "Buffering…",
+  reconnecting: "Reconnecting…",
+  paused: "Paused",
+  error: "Station unavailable",
+};
+
+function paintHero() {
+  const st = current();
+  const hero = $("hero");
+  hero.dataset.status = S.status;
+
+  if (!st) {
+    $("heroArt").className = "art idle";
+    $("heroArt").innerHTML =
+      '<svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true">' +
+      '<circle cx="12" cy="16" r="1.7" fill="currentColor"/>' +
+      '<path d="M8.6 9.6a5 5 0 0 0 0 6.4M15.4 9.6a5 5 0 0 1 0 6.4M5.6 6.6a9.2 9 0 0 0 0 12.4M18.4 6.6a9.2 9 0 0 1 0 12.4"' +
+      ' fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>';
+    $("heroName").textContent = "Pick a station";
+    $("heroMeta").textContent = allStations().length + " live stations from Tunisia";
+    $("heroStatus").textContent = "Ready";
+    $("barName").textContent = "Not playing";
+    return;
+  }
+
+  const art = $("heroArt");
+  art.className = "art";
+  art.style.setProperty("--c", st.c || "#8E8B87");
+  art.textContent = initials(st.name);
+
+  $("heroName").textContent = st.name;
+  const bits = [st.city, st.kbps ? st.kbps + " kbps" : null, "Live"].filter(Boolean);
+  $("heroMeta").textContent = bits.join(" · ");
+  $("heroStatus").textContent = STATUS_TEXT[S.status] || "Ready";
+  $("barName").textContent = st.name;
+}
+
+function paintList() {
+  const list = $("list");
+  const items = visible();
+
+  if (!items.length) {
+    list.innerHTML = '<p class="empty">' +
+      (S.filter === "fav"
+        ? "No favourites yet.<br>Tap the star next to a station to save it here."
+        : "Nothing here.") + "</p>";
+    return;
+  }
+
+  list.innerHTML = items.map((s) => {
+    const on = s.id === S.stationId;
+    const fav = S.favs.has(s.id);
+    const sub = [s.city, s.group === "national" ? "National" : "Music & talk"].filter(Boolean).join(" · ");
+    return '<div class="st' + (on ? " on" : "") + '" data-id="' + s.id + '" role="button" tabindex="0"' +
+      ' style="--c:' + (s.c || "#8E8B87") + '" aria-label="Play ' + esc(s.name) + '">' +
+      '<span class="dot">' + initials(s.name) + "</span>" +
+      '<span class="txt"><span class="nm">' + esc(s.name) + '</span><span class="sub">' + esc(sub) + "</span></span>" +
+      '<span class="mini" aria-hidden="true"><i></i><i></i><i></i></span>' +
+      '<button class="fav" aria-label="Favourite ' + esc(s.name) + '" aria-pressed="' + fav + '" data-fav="' + s.id + '">' +
+        '<svg viewBox="0 0 24 24"><path d="m12 3.6 2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg>' +
+      "</button></div>";
+  }).join("");
+}
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+}
+
+function paintTransport() {
+  const playing = S.status === "playing" || S.status === "buffering" || S.status === "reconnecting" || S.status === "loading";
+  $("btnPlay").classList.toggle("on", playing);
+  $("btnPlay").setAttribute("aria-label", playing ? "Pause" : "Play");
+  const st = current();
+  $("btnFav").setAttribute("aria-pressed", st ? String(S.favs.has(st.id)) : "false");
+  $("btnFav").disabled = !st;
+}
+
+function paintAll() { paintHero(); paintList(); paintTransport(); }
+
+/* ============================================================
+   Audio engine
+   ============================================================ */
+let retryTimer = null;
+let failCount = 0;
+let lastFailAt = 0;
+let lastTime = 0;
+let stallTicks = 0;
+let suppressPause = false;   // load() fires a bogus "pause"; ignore it
+let wantPlay = false;        // do we intend to be playing right now?
+
+const bust = (url) => url + (url.includes("?") ? "&" : "?") + "t=" + Date.now();
+
+function setStatus(s) {
+  if (S.status === s) return;
+  S.status = s;
+  paintHero();
+  paintTransport();
+  $("list").classList.toggle("playing", s === "playing");
+  syncMediaSession();
+}
+
+/* Loading a new src makes the element emit "pause" even though we asked for
+   the opposite. A short suppression window keeps that from clobbering the
+   "loading" / "reconnecting" states. */
+function loadSrc(url) {
+  suppressPause = true;
+  audio.src = bust(url);   // assigning src already starts the load; an extra
+                           // load() would abort and restart the fetch
+  setTimeout(() => { suppressPause = false; }, 600);
+}
+
+function playStation(st, autoplay = true) {
+  if (!st) return;
+  clearTimeout(retryTimer);
+  S.stationId = st.id;
+  store.set("last", st.id);
+  failCount = 0;
+  stallTicks = 0;
+  lastTime = 0;
+  wantPlay = autoplay;
+  loadSrc(st.url);
+  setStatus(autoplay ? "loading" : "paused");
+  paintAll();
+  if (autoplay) start();
+}
+
+function start() {
+  wantPlay = true;
+  const p = audio.play();
+  if (p && p.catch) {
+    p.catch((err) => {
+      if (!err || err.name === "AbortError") return;      // superseded by a newer load
+      if (err.name === "NotAllowedError") { wantPlay = false; setStatus("paused"); return; }
+      fail(err.name || "play");
+    });
+  }
+}
+
+function pausePlayback() {
+  wantPlay = false;
+  audio.pause();
+}
+
+function reconnect() {
+  const st = current();
+  if (!st || S.status === "error") return;
+  clearTimeout(retryTimer);
+  setStatus("reconnecting");
+  const wait = Math.min(1000 * Math.pow(1.8, failCount), 6000);
+  retryTimer = setTimeout(() => {
+    const s2 = current();
+    if (!s2) return;
+    loadSrc(s2.url);
+    start();
+  }, wait);
+}
+
+function fail(why) {
+  const now = Date.now();
+  if (now - lastFailAt < 900) return;   // the same failure is often reported twice
+  lastFailAt = now;
+  failCount += 1;
+  if (failCount >= 3) { wantPlay = false; setStatus("error"); return; }
+  reconnect();
+}
+
+audio.addEventListener("playing", () => {
+  failCount = 0;
+  stallTicks = 0;
+  lastTime = audio.currentTime;
+  wantPlay = true;
+  setStatus("playing");
+  applyWakeLock();
+});
+audio.addEventListener("waiting", () => { if (wantPlay) setStatus("buffering"); });
+audio.addEventListener("stalled", () => { if (wantPlay) setStatus("buffering"); });
+audio.addEventListener("pause", () => {
+  if (suppressPause) return;
+  if (S.status === "error") return;
+  wantPlay = false;
+  setStatus("paused");
+  releaseWakeLock();
+});
+audio.addEventListener("error", () => {
+  if (!audio.getAttribute("src")) return;
+  fail("media");
+});
+
+/* Liveness watchdog: a live stream must keep advancing its clock.
+   (No "timeupdate" listener here — that would keep resetting lastTime
+   and a stall would never be noticed.) */
+setInterval(() => {
+  if (S.status !== "playing" && S.status !== "buffering") return;
+  if (audio.paused) return;
+  if (audio.currentTime > lastTime + 0.05) stallTicks = 0;
+  else stallTicks += 1;
+  lastTime = audio.currentTime;
+  if (stallTicks >= 5) { stallTicks = 0; fail("stalled"); }
+}, 3500);
+
+function togglePlay() {
+  const st = current();
+  if (!st) {
+    const first = visible()[0] || allStations()[0];
+    if (first) playStation(first);
+    return;
+  }
+  if (S.status === "error" || !audio.getAttribute("src")) { playStation(st); return; }
+  if (audio.paused) start();
+  else pausePlayback();
+}
+
+function step(dir) {
+  const list = visible();
+  if (!list.length) return;
+  let i = list.findIndex((s) => s.id === S.stationId);
+  if (i === -1) i = dir > 0 ? -1 : 0;
+  playStation(list[(i + dir + list.length) % list.length]);
+}
+
+function stopAll() {
+  clearTimeout(retryTimer);
+  failCount = 0;
+  wantPlay = false;
+  suppressPause = true;
+  audio.pause();
+  audio.removeAttribute("src");
+  audio.load();
+  setTimeout(() => { suppressPause = false; }, 600);
+  setStatus("idle");
+}
+
+/* ============================================================
+   Media Session — lock screen, car display, steering wheel
+   ============================================================ */
+function syncMediaSession() {
+  if (!("mediaSession" in navigator)) return;
+  const st = current();
+  try {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: st ? st.name : "Tounsi Radio",
+      artist: "Tounsi Radio",
+      album: st ? st.city + " · Live" : "Tunisian radio",
+      artwork: [
+        { src: new URL("icon-512.png", location.href).href, sizes: "512x512", type: "image/png" },
+        { src: new URL("icon-180.png", location.href).href, sizes: "180x180", type: "image/png" }
+      ]
+    });
+    navigator.mediaSession.playbackState = S.status === "playing" ? "playing"
+      : (S.status === "paused" || S.status === "idle") ? "paused" : "none";
+  } catch {}
+}
+
+if ("mediaSession" in navigator) {
+  const resumeFromCar = () => {
+    const st = current();
+    if (!st) return;
+    if (S.status === "error" || !audio.getAttribute("src")) playStation(st);
+    else start();
+  };
+  const handlers = {
+    play: resumeFromCar,
+    pause: () => pausePlayback(),
+    stop: () => stopAll(),
+    nexttrack: () => step(1),
+    previoustrack: () => step(-1)
+  };
+  for (const [k, fn] of Object.entries(handlers)) {
+    try { navigator.mediaSession.setActionHandler(k, fn); } catch {}
+  }
+}
+
+/* ============================================================
+   Screen wake lock (keep the dashboard display alive)
+   ============================================================ */
+let wakeLock = null;
+async function applyWakeLock() {
+  if (!S.wake || !("wakeLock" in navigator) || document.visibilityState !== "visible") return;
+  try { wakeLock = await navigator.wakeLock.request("screen"); } catch {}
+}
+function releaseWakeLock() {
+  if (wakeLock) { try { wakeLock.release(); } catch {} wakeLock = null; }
+}
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") {
+    if (S.status === "playing") applyWakeLock();
+  }
+});
+
+/* ============================================================
+   Favourites
+   ============================================================ */
+function toggleFav(id) {
+  if (S.favs.has(id)) S.favs.delete(id); else S.favs.add(id);
+  store.set("favs", [...S.favs]);
+  paintAll();
+}
+
+/* ============================================================
+   Settings sheet
+   ============================================================ */
+const sheet = $("sheet");
+const scrim = $("scrim");
+function openSheet() {
+  sheet.classList.add("open");
+  scrim.classList.add("open");
+  renderCustomList();
+}
+function closeSheet() {
+  sheet.classList.remove("open");
+  scrim.classList.remove("open");
+}
+
+function renderCustomList() {
+  const box = $("customList");
+  if (!S.custom.length) { box.innerHTML = '<p class="note">None yet.</p>'; return; }
+  box.innerHTML = S.custom.map((s) =>
+    '<div class="srow"><div><div class="lbl">' + esc(s.name) + '</div>' +
+    '<div class="hint" style="word-break:break-all">' + esc(s.url) + '</div></div>' +
+    '<button class="btn" data-del="' + s.id + '">Remove</button></div>'
+  ).join("");
+}
+
+function addStation(name, url) {
+  if (!/^https?:\/\//i.test(url)) return "Enter a link starting with http:// or https://";
+  if (allStations().some((s) => s.url === url)) return "That station is already in the list.";
+  const id = "custom-" + Date.now().toString(36);
+  const st = { id, name: (name || "My station").slice(0, 60), city: "Custom", group: "music", url, c: "#7C8794", kbps: 0 };
+  S.custom.push(st);
+  store.set("custom", S.custom);
+  paintAll();
+  renderCustomList();
+  return "Added.";
+}
+
+$("btnSettings").addEventListener("click", openSheet);
+$("scrim").addEventListener("click", closeSheet);
+
+$("swWake").addEventListener("click", (e) => {
+  S.wake = !S.wake;
+  store.set("wake", S.wake);
+  e.currentTarget.setAttribute("aria-checked", String(S.wake));
+  if (S.wake) applyWakeLock(); else releaseWakeLock();
+});
+$("swWake").setAttribute("aria-checked", String(S.wake));
+
+$("btnAddManual").addEventListener("click", () => {
+  const msg = addStation($("inName").value.trim(), $("inUrl").value.trim());
+  const el = $("addMsg");
+  el.textContent = msg;
+  el.style.display = "block";
+  if (msg === "Added.") { $("inName").value = ""; $("inUrl").value = ""; }
+});
+
+$("btnBrowse").addEventListener("click", async (e) => {
+  const btn = e.currentTarget;
+  const box = $("dirList");
+  btn.disabled = true;
+  btn.textContent = "Searching…";
+  box.innerHTML = "";
+  try {
+    const r = await fetch("https://de1.api.radio-browser.info/json/stations/bycountrycodeexact/TN?hidebroken=true&order=clickcount&reverse=true&limit=250");
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const data = await r.json();
+    const seen = new Set(allStations().map((s) => s.url));
+    const good = data.filter((s) => {
+      const u = s.url_resolved || s.url || "";
+      const codec = String(s.codec || "").toUpperCase();
+      return u.startsWith("https://") && !s.hls && (codec === "MP3" || codec.startsWith("AAC")) && !seen.has(u);
+    }).slice(0, 25);
+
+    if (!good.length) { box.innerHTML = '<p class="note">No new stations found right now.</p>'; return; }
+    box.innerHTML = good.map((s) =>
+      '<button class="st" data-addurl="' + esc(s.url_resolved) + '" data-addname="' + esc(s.name) + '" style="--c:#3F8FA3">' +
+      '<span class="dot">' + initials(s.name) + "</span>" +
+      '<span class="txt"><span class="nm">' + esc(s.name) + "</span>" +
+      '<span class="sub">' + esc(s.country || "Tunisia") + " · tap to add</span></span>" +
+      '<span class="fav" style="color:#7C8794"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button>'
+    ).join("");
+  } catch (err) {
+    box.innerHTML = '<p class="note">Directory unreachable right now. You can still add a station by link above.</p>';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Browse directory";
+  }
+});
+
+$("dirList").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-addurl]");
+  if (!b) return;
+  addStation(b.dataset.addname, b.dataset.addurl);
+  b.remove();
+});
+
+$("customList").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-del]");
+  if (!b) return;
+  const id = b.dataset.del;
+  S.custom = S.custom.filter((s) => s.id !== id);
+  store.set("custom", S.custom);
+  if (S.stationId === id) stopAll();
+  paintAll();
+  renderCustomList();
+});
+
+/* ============================================================
+   Wiring
+   ============================================================ */
+$("btnPlay").addEventListener("click", togglePlay);
+$("btnNext").addEventListener("click", () => step(1));
+$("btnPrev").addEventListener("click", () => step(-1));
+$("btnStop").addEventListener("click", stopAll);
+$("btnFav").addEventListener("click", () => { if (S.stationId) toggleFav(S.stationId); });
+
+$("list").addEventListener("click", (e) => {
+  const fav = e.target.closest("[data-fav]");
+  if (fav) { e.stopPropagation(); toggleFav(fav.dataset.fav); return; }
+  const card = e.target.closest("[data-id]");
+  if (!card) return;
+  const st = byId(card.dataset.id);
+  if (!st) return;
+  if (st.id === S.stationId && !audio.paused) { audio.pause(); return; }
+  playStation(st);
+});
+
+$("list").addEventListener("keydown", (e) => {
+  if (e.key !== "Enter" && e.key !== " ") return;
+  const fav = e.target.closest("[data-fav]");
+  if (fav) { e.preventDefault(); toggleFav(fav.dataset.fav); }
+});
+
+document.querySelectorAll(".chip").forEach((chip) => {
+  chip.addEventListener("click", () => {
+    S.filter = chip.dataset.filter;
+    document.querySelectorAll(".chip").forEach((c) => c.setAttribute("aria-pressed", String(c === chip)));
+    paintList();
+  });
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.target.matches("input, textarea")) return;
+  if (e.code === "Space") { e.preventDefault(); togglePlay(); }
+  else if (e.code === "ArrowRight") step(1);
+  else if (e.code === "ArrowLeft") step(-1);
+});
+
+$("hintClose").addEventListener("click", () => {
+  $("hint").classList.remove("show");
+  store.set("hintSeen", true);
+});
+
+/* ============================================================
+   Boot
+   ============================================================ */
+(function boot() {
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const standalone = window.navigator.standalone === true ||
+    window.matchMedia("(display-mode: standalone)").matches;
+  if (isIOS && !standalone && !store.get("hintSeen", false)) $("hint").classList.add("show");
+
+  paintAll();
+
+  const secure = location.protocol === "https:" || location.hostname === "localhost" || location.hostname === "127.0.0.1";
+  if ("serviceWorker" in navigator && secure) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("sw.js").catch(() => {});
+    });
+  }
+})();
+</script>
+</body>
+</html>
